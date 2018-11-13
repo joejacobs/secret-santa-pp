@@ -1,0 +1,52 @@
+{
+    "Hagrid": {
+        "email": "hagrid@example.com"
+    },
+    "Ginny": {
+        "email": "ginny@example.com",
+        "parents": ["Arthur", "Molly"],
+        "partner": ["Harry"]
+    },
+    "Harry" : {
+        "email": "harry@example.com",
+        "godparents": ["Sirius"],
+        "partner": ["Ginny"]
+    },
+    "Dumbledore": {
+        "email": "dumbledore@example.com"
+    },
+    "Ron": {
+        "email": "ron@example.com",
+        "parents": ["Arthur", "Molly"],
+        "partner": ["Hermione"]
+    },
+    "Hermione": {
+        "email": "hermione@example.com",
+        "partner": ["Ron"]
+    },
+    "Neville" : {
+        "email": "neville@example.com"
+    },
+    "Luna": {
+        "email": "luna@example.com"
+    },
+    "Fred": {
+        "email": "fred@example.com",
+        "parents": ["Arthur", "Molly"]
+    },
+    "George": {
+        "email": "george@example.com",
+        "parents": ["Arthur", "Molly"]
+    },
+    "Sirius" : {
+        "email": "sirius@example.com"
+    },
+    "Remus": {
+        "email": "remus@example.com",
+        "partner": ["Tonks"]
+    },
+    "Tonks": {
+        "email": "tonks@example.com",
+        "partner": ["Remus"]
+    }
+}

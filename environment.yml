@@ -1,0 +1,9 @@
+name: secretsantapp
+dependencies:
+  - matplotlib==2.2.3
+  - networkx==1.11
+  - python=3.7
+  - pip:
+    - FuncDesigner==0.5627
+    - nh-currency
+    - openopt==0.5628
