@@ -35,6 +35,8 @@ def argument_parser():
     p.add_argument("-em", "--email-message", type=str,
                    help=("Path to a text file containing the notification "
                          "email message"))
+    p.add_argument("-en", "--email-sender", type=str,
+                   help="Name of the person sending the email")
     p.add_argument("-es", "--email-subject", type=str,
                    help=("Path to a text file containing the notification "
                          "email subject"))
@@ -154,6 +156,7 @@ def main():
         print("Send notification emails from: {}".format(args.email_address))
         assert args.email_message
         assert args.email_subject
+        assert args.email_sender
         assert args.smtp_address
 
         limit_display = None
@@ -204,8 +207,9 @@ def main():
         print("Initialise emailer: {}:{}".format(args.smtp_address,
                                                  args.smtp_port))
         emailer = Emailer(args.smtp_address, args.smtp_port, smtp_username,
-                          smtp_password, args.email_address, reply_address,
-                          sub_constructor, msg_constructor, html_constructor)
+                          smtp_password, args.email_address, args.email_sender,
+                          reply_address, sub_constructor, msg_constructor,
+                          html_constructor)
 
         for gifter, recipients in ss_graph.get_solution_arr():
             print("\tEmailing {}".format(gifter))
