@@ -9,6 +9,7 @@ commented fairly well and I have provided sample input files to demonstrate the
 format required.
 
 Some features:
+
 * multiple recipients per gifter
 * automatically send email notifications to all participants
 * exclusion, low-probability and medium-probability constraints
