@@ -146,7 +146,7 @@ def main():
 
         print("Save new people data to disk: {}".format(args.people_data_json))
         with io.open(args.people_data_json, mode="w", encoding="utf-8") as fp:
-            fp.write(json.dumps(new_people_data))
+            fp.write(json.dumps(new_people_data, indent=4, sort_keys=True))
 
     if args.visualise_graph:
         print("Visualise solution")
