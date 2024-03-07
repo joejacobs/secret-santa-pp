@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "SecretSanta++"
+version = "1.0.0"
+description = "Secret santa with a few extra bells and whistles"
+authors = ["Joe Jacobs <git@hazardcell.com>"]
+readme = "README.md"
+license = "AGPL-3.0-or-later"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
