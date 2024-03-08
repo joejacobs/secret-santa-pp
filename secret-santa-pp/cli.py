@@ -3,23 +3,18 @@ from pathlib import Path
 import typer
 from rich.console import Console
 
-from models import LimitCriteria, People
+from models import Config
 
 app = typer.Typer()
 console = Console()
 
 
 @app.command()
-def visualise_graph(people_file_path: Path, limit_criteria_file_path: Path) -> None:
-    with people_file_path.open() as fp:
-        people_dict = People.validate_json(fp.read())
+def visualise_graph(config_file_path: Path) -> None:
+    with config_file_path.open() as fp:
+        config = Config.validate_json(fp.read())
 
-    console.print(people_dict)
-
-    with limit_criteria_file_path.open() as fp:
-        limit_criteria = LimitCriteria.validate_json(fp.read())
-
-    console.print(limit_criteria)
+    console.print(config)
 
     """
     graph = SecretSantaGraph(

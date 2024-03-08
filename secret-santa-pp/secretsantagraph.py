@@ -9,6 +9,8 @@ import openopt
 import random
 from matplotlib import pyplot as plt
 
+from models import People, Person
+
 
 def _solve_tsp(graph):
     prob = openopt.TSP(graph)
@@ -33,7 +35,7 @@ class SecretSantaGraph(object):
 
     def __init__(
         self,
-        people_data,
+        people_data: People,
         n_recipients,
         exclusion_criteria=[],
         low_prob_criteria=[],

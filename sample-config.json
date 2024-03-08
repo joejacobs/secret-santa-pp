@@ -1,0 +1,92 @@
+{
+  "people": {
+    "Hagrid": {
+      "email": "hagrid@example.com"
+    },
+    "Ginny": {
+      "email": "ginny@example.com",
+      "relationships": {
+        "partner": ["Harry"],
+        "parent": ["Arthur", "Molly"]
+      }
+    },
+    "Harry": {
+      "email": "harry@example.com",
+      "relationships": {
+        "partner": ["Ginny"],
+        "godparent": ["Sirius"]
+      }
+    },
+    "Dumbledore": {
+      "email": "dumbledore@example.com"
+    },
+    "Ron": {
+      "email": "ron@example.com",
+      "relationships": {
+        "partner": ["Hermione"],
+        "parent": ["Arthur", "Molly"]
+      }
+    },
+    "Hermione": {
+      "email": "hermione@example.com",
+      "relationships": {
+        "partner": ["Ron"]
+      }
+    },
+    "Neville": {
+      "email": "neville@example.com"
+    },
+    "Luna": {
+      "email": "luna@example.com"
+    },
+    "Fred": {
+      "email": "fred@example.com",
+      "relationships": {
+        "parent": ["Arthur", "Molly"]
+      }
+    },
+    "George": {
+      "email": "george@example.com",
+      "relationships": {
+        "parent": ["Arthur", "Molly"]
+      }
+    },
+    "Sirius": {
+      "email": "sirius@example.com"
+    },
+    "Remus": {
+      "email": "remus@example.com",
+      "relationships": {
+        "partner": ["Tonks"]
+      }
+    },
+    "Tonks": {
+      "email": "tonks@example.com",
+      "relationships": {
+        "partner": ["Remus"]
+      }
+    }
+  },
+  "limits": [
+    {
+      "relationship": "parent",
+      "comparator": "two-way contains",
+      "limit": "exclude"
+    },
+    {
+      "relationship": "partner",
+      "comparator": "two-way contains",
+      "limit": "exclude"
+    },
+    {
+      "relationship": "parent",
+      "comparator": "equality",
+      "limit": "low-probability"
+    },
+    {
+      "relationship": "godparent",
+      "comparator": "two-way contains",
+      "limit": "medium-probability"
+    }
+  ]
+}
