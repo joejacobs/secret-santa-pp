@@ -1,7 +1,7 @@
 from typing import Literal
 
+import networkx as nx
 import numpy as np
-from numpy.typing import NDArray
 from pydantic import BaseModel, ConfigDict, EmailStr
 
 
@@ -37,8 +37,8 @@ class LimitCriterion(BaseModel):
 class PeopleGraph(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    nodes: list[Person]
-    edges: NDArray[np.float64]
+    graph: nx.DiGraph
+    people: list[Person]
     limit_criteria: list[LimitCriterion]
     rng: np.random.Generator
 
@@ -46,24 +46,29 @@ class PeopleGraph(BaseModel):
         self, people: list[Person], limits: list[LimitCriterion], seed: int = 0
     ) -> None:
         super().__init__(
-            nodes=people,
-            edges=np.zeros((len(people), len(people))),
-            rng=np.random.default_rng(seed=seed),
+            graph=nx.DiGraph(),
+            people=people,
             limit_criteria=limits,
+            rng=np.random.default_rng(seed=seed),
         )
 
     def random_init(self) -> None:
-        for src_id in range(self.edges.shape[0]):
-            src_person = self.nodes[src_id]
+        n_people = len(self.people)
+        for id1 in range(n_people):
+            person1 = self.people[id1]
 
-            for dst_id in range(self.edges.shape[1]):
-                if dst_id == src_id:
-                    continue
+            for id2 in range(id1 + 1, n_people):
+                person2 = self.people[id2]
 
-                dst_person = self.nodes[dst_id]
-
-                self.edges[src_id, dst_id] = self._get_edge_weight(
-                    src_person, dst_person
+                self.graph.add_edge(
+                    person1.name,
+                    person2.name,
+                    weight=self._get_edge_weight(person1, person2),
+                )
+                self.graph.add_edge(
+                    person2.name,
+                    person1.name,
+                    weight=self._get_edge_weight(person2, person1),
                 )
 
     def _get_edge_weight(self, src_person: Person, dst_person: Person) -> float:
@@ -83,4 +88,20 @@ class PeopleGraph(BaseModel):
                 if criterion.limit == "medium-probability":
                     weight -= self.rng.uniform(0.05, 0.1)
 
-        return max(0, weight)
+        return (1 - max(0, weight)) * 100
+
+    def solve(self, solution_key: str, n_recipients: int) -> None:
+        initial_graph = self.graph.copy()
+        final_solution = nx.DiGraph()
+
+        for _ in range(n_recipients):
+            solution = nx.approximation.traveling_salesman_problem(initial_graph)
+            initial_graph.remove_edges_from(solution.edges)
+            final_solution.add_edges_from(solution.edges)
+
+        self.graph = final_solution
+
+        for person in self.people:
+            person.relationships[solution_key] = sorted(
+                list(final_solution.neighbors(person.name))
+            )

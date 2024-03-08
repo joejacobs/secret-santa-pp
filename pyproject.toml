@@ -14,6 +14,9 @@ pydantic = "^2.6.3"
 email-validator = "^2.1.1"
 rich = "^13.7.1"
 numpy = "^1.26.4"
+networkx = "^3.2.1"
+matplotlib = "^3.8.3"
+scipy = "^1.12.0"
 
 
 [build-system]

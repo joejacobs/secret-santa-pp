@@ -1,6 +1,9 @@
+import logging
 from pathlib import Path
 
+import networkx as nx
 import typer
+from matplotlib import pyplot as plt
 from rich.console import Console
 
 from models import PeopleGraph
@@ -14,8 +17,19 @@ def visualise_graph(config_file_path: Path) -> None:
     with config_file_path.open() as fp:
         people = PeopleGraph.model_validate_json(fp.read())
 
+    logging.info("INIT")
     people.random_init()
-    console.print(people)
+
+    logging.info("SOLVE")
+    people.solve("2023", 3)
+
+    options = {
+        "font_size": 36,
+        "node_color": "white",
+        "edgecolors": "black",
+    }
+    nx.draw(people.graph, **options)
+    plt.show()
 
     """
     graph = SecretSantaGraph(
