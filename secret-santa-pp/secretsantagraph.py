@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
-from collections import Counter
-from matplotlib import pyplot as plt
-
 import copy
 import io
 import json
+from collections import Counter
+
 import networkx
 import numpy as np
 import openopt
 import random
+from matplotlib import pyplot as plt
 
 
 def _solve_tsp(graph):
@@ -32,8 +31,14 @@ class SecretSantaGraph(object):
     _people_data = None
     _ss_graph = None
 
-    def __init__(self, people_data, n_recipients, exclusion_criteria=[],
-                 low_prob_criteria=[], medium_prob_criteria=[]):
+    def __init__(
+        self,
+        people_data,
+        n_recipients,
+        exclusion_criteria=[],
+        low_prob_criteria=[],
+        medium_prob_criteria=[],
+    ):
         # validate inputs
         assert n_recipients > 0
         assert people_data

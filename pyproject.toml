@@ -5,9 +5,14 @@ description = "Secret santa with a few extra bells and whistles"
 authors = ["Joe Jacobs <git@hazardcell.com>"]
 readme = "README.md"
 license = "AGPL-3.0-or-later"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
+typer = "^0.9.0"
+pydantic = "^2.6.3"
+email-validator = "^2.1.1"
+rich = "^13.7.1"
 
 
 [build-system]

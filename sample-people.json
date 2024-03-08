@@ -4,25 +4,35 @@
     },
     "Ginny": {
         "email": "ginny@example.com",
-        "parents": ["Arthur", "Molly"],
-        "partner": ["Harry"]
+        "relationships": [
+            ["partner", "Harry"],
+            ["parent", "Arthur"],
+            ["parent", "Molly"]
+        ]
     },
     "Harry" : {
         "email": "harry@example.com",
-        "godparents": ["Sirius"],
-        "partner": ["Ginny"]
+        "relationships": [
+            ["partner", "Ginny"],
+            ["godparent", "Sirius"]
+        ]
     },
     "Dumbledore": {
         "email": "dumbledore@example.com"
     },
     "Ron": {
         "email": "ron@example.com",
-        "parents": ["Arthur", "Molly"],
-        "partner": ["Hermione"]
+        "relationships": [
+            ["partner", "Hermione"],
+            ["parent", "Arthur"],
+            ["parent", "Molly"]
+        ]
     },
     "Hermione": {
         "email": "hermione@example.com",
-        "partner": ["Ron"]
+        "relationships": [
+            ["partner", "Ron"]
+        ]
     },
     "Neville" : {
         "email": "neville@example.com"
@@ -32,21 +42,31 @@
     },
     "Fred": {
         "email": "fred@example.com",
-        "parents": ["Arthur", "Molly"]
+        "relationships": [
+            ["parent", "Arthur"],
+            ["parent", "Molly"]
+        ]
     },
     "George": {
         "email": "george@example.com",
-        "parents": ["Arthur", "Molly"]
+        "relationships": [
+            ["parent", "Arthur"],
+            ["parent", "Molly"]
+        ]
     },
     "Sirius" : {
         "email": "sirius@example.com"
     },
     "Remus": {
         "email": "remus@example.com",
-        "partner": ["Tonks"]
+        "relationships": [
+            ["partner", "Tonks"]
+        ]
     },
     "Tonks": {
         "email": "tonks@example.com",
-        "partner": ["Remus"]
+        "relationships": [
+            ["partner", "Tonks"]
+        ]
     }
 }
