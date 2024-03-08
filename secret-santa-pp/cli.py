@@ -3,7 +3,7 @@ from pathlib import Path
 import typer
 from rich.console import Console
 
-from models import Config
+from models import PeopleGraph
 
 app = typer.Typer()
 console = Console()
@@ -12,9 +12,10 @@ console = Console()
 @app.command()
 def visualise_graph(config_file_path: Path) -> None:
     with config_file_path.open() as fp:
-        config = Config.validate_json(fp.read())
+        people = PeopleGraph.model_validate_json(fp.read())
 
-    console.print(config)
+    people.random_init()
+    console.print(people)
 
     """
     graph = SecretSantaGraph(

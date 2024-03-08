@@ -3,13 +3,11 @@ import io
 import json
 from collections import Counter
 
-import networkx
+from pydantic import BaseModel
 import numpy as np
-import openopt
 import random
-from matplotlib import pyplot as plt
 
-from models import People, Person
+from models import Config
 
 
 def _solve_tsp(graph):
@@ -18,46 +16,13 @@ def _solve_tsp(graph):
     return soln
 
 
-def _validate_criteria(criteria):
-    valid_criteria_types = ["1-way contains", "2-way contains", "equality"]
+class PeopleGraph(BaseModel):
+    nodes: list[str]
+    edge_weight_types: np.ndarray[int]
 
-    for _, c_type in criteria:
-        assert c_type in valid_criteria_types
-
-
-class SecretSantaGraph(object):
-    _medium_prob_criteria = None
-    _exclusion_criteria = None
-    _low_prob_criteria = None
-    _n_recipients = None
-    _people_data = None
-    _ss_graph = None
-
-    def __init__(
-        self,
-        people_data: People,
-        n_recipients,
-        exclusion_criteria=[],
-        low_prob_criteria=[],
-        medium_prob_criteria=[],
-    ):
-        # validate inputs
-        assert n_recipients > 0
-        assert people_data
-
-        for name in people_data:
-            assert "email" in people_data[name]
-
-        _validate_criteria(medium_prob_criteria)
-        _validate_criteria(exclusion_criteria)
-        _validate_criteria(low_prob_criteria)
-
-        # store for later use if everything is good
-        self._medium_prob_criteria = medium_prob_criteria
-        self._exclusion_criteria = exclusion_criteria
-        self._low_prob_criteria = low_prob_criteria
-        self._n_recipients = n_recipients
-        self._people_data = people_data
+    def __init__(self, config: Config):
+        self.nodes = list(config.people.keys())
+        self.edges =
 
     def _criteria_met(self, c_key, c_type, name1, name2):
         people = self._people_data

@@ -1,72 +1,85 @@
 {
-  "people": {
-    "Hagrid": {
+  "people": [
+    {
+      "name": "Hagrid",
       "email": "hagrid@example.com"
     },
-    "Ginny": {
+    {
+      "name": "Ginny",
       "email": "ginny@example.com",
       "relationships": {
         "partner": ["Harry"],
         "parent": ["Arthur", "Molly"]
       }
     },
-    "Harry": {
+    {
+      "name": "Harry",
       "email": "harry@example.com",
       "relationships": {
         "partner": ["Ginny"],
         "godparent": ["Sirius"]
       }
     },
-    "Dumbledore": {
+    {
+      "name": "Dumbledore",
       "email": "dumbledore@example.com"
     },
-    "Ron": {
+    {
+      "name": "Ron",
       "email": "ron@example.com",
       "relationships": {
         "partner": ["Hermione"],
         "parent": ["Arthur", "Molly"]
       }
     },
-    "Hermione": {
+    {
+      "name": "Hermione",
       "email": "hermione@example.com",
       "relationships": {
         "partner": ["Ron"]
       }
     },
-    "Neville": {
+    {
+      "name": "Neville",
       "email": "neville@example.com"
     },
-    "Luna": {
+    {
+      "name": "Luna",
       "email": "luna@example.com"
     },
-    "Fred": {
+    {
+      "name": "Fred",
       "email": "fred@example.com",
       "relationships": {
         "parent": ["Arthur", "Molly"]
       }
     },
-    "George": {
+    {
+      "name": "George",
       "email": "george@example.com",
       "relationships": {
         "parent": ["Arthur", "Molly"]
       }
     },
-    "Sirius": {
+    {
+      "name": "Sirius",
       "email": "sirius@example.com"
     },
-    "Remus": {
+    {
+      "name": "Remus",
       "email": "remus@example.com",
       "relationships": {
         "partner": ["Tonks"]
       }
     },
-    "Tonks": {
+    {
+      "name": "Tonks",
       "email": "tonks@example.com",
       "relationships": {
         "partner": ["Remus"]
       }
     }
-  },
+  ],
   "limits": [
     {
       "relationship": "parent",
