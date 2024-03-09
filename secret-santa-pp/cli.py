@@ -1,12 +1,10 @@
 import logging
 from pathlib import Path
 
-import networkx as nx
 import typer
-from matplotlib import pyplot as plt
 from rich.console import Console
 
-from models import PeopleGraph
+from models import Config, Solution
 
 app = typer.Typer()
 console = Console()
@@ -14,32 +12,16 @@ console = Console()
 
 @app.command()
 def visualise_graph(config_file_path: Path) -> None:
+    logging.basicConfig(level=logging.INFO)
+
+    logging.info("LOAD")
     with config_file_path.open() as fp:
-        people = PeopleGraph.model_validate_json(fp.read())
+        config = Config.model_validate_json(fp.read())
 
     logging.info("INIT")
-    people.random_init()
+    solution = Solution(config, 3)
 
-    logging.info("SOLVE")
-    people.solve("2023", 3)
-
-    options = {
-        "font_size": 36,
-        "node_color": "white",
-        "edgecolors": "black",
-    }
-    nx.draw(people.graph, **options)
-    plt.show()
-
-    """
-    graph = SecretSantaGraph(
-        people_data,
-        args.n_recipients,
-        exclusion_criteria=exclusion,
-        low_prob_criteria=low_prob,
-        medium_prob_criteria=med_prob,
-    )
-    """
+    console.log(solution.graph.edges)
 
 
 if __name__ == "__main__":
