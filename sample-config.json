@@ -80,7 +80,7 @@
       }
     }
   ],
-  "limit_criteria": [
+  "constraints": [
     {
       "relationship": "parent",
       "comparator": "two-way contains",

@@ -12,12 +12,12 @@ class Person(BaseModel):
     relationships: dict[str, list[str]] = {}
 
 
-class LimitCriterion(BaseModel):
+class Constraint(BaseModel):
     relationship: str
     comparator: Literal["one-way contains", "two-way contains", "equality"]
     limit: Literal["exclude", "low-probability", "medium-probability"]
 
-    def meet(self, src_person: Person, dst_person: Person) -> bool:
+    def meet_criterion(self, src_person: Person, dst_person: Person) -> bool:
         src_relationship = src_person.relationships.get(self.relationship)
         if src_relationship is None:
             return False
@@ -37,7 +37,7 @@ class LimitCriterion(BaseModel):
 
 class Config(BaseModel):
     people: list[Person]
-    limit_criteria: list[LimitCriterion]
+    constraints: list[Constraint]
 
 
 def tsp_solver(graph: nx.DiGraph, weight: str) -> list[str]:
@@ -79,15 +79,14 @@ class Solution(BaseModel):
         if len(src_person.relationships) == 0:
             return weight
 
-        for criterion in self.config.limit_criteria:
-            if criterion.meet(src_person, dst_person):
-                if criterion.limit == "exclude":
+        for constraint in self.config.constraints:
+            if constraint.meet_criterion(src_person, dst_person):
+                if constraint.limit == "exclude":
                     return -1
 
-                if criterion.limit == "low-probability":
+                if constraint.limit == "low-probability":
                     weight += 4
-
-                if criterion.limit == "medium-probability":
+                elif constraint.limit == "medium-probability":
                     weight += 2
 
         return weight
