@@ -1,43 +1,46 @@
-import logging
 from pathlib import Path
-from typing import Optional
+from typing import Annotated, Optional
 
 import typer
+from rich.console import Console
 
 from models import Config, Solution
 
 app = typer.Typer()
+console = Console()
 
 
 @app.command()
 def generate_solution(
-    config_file_path: Path = typer.Argument(help="Path to the config file."),
-    n_recipients: int = typer.Argument(default=1, help="Number of recipients."),
-    solution_key: Optional[str] = typer.Argument(
-        default=None,
-        help=(
-            "Relationship key to use when storing the solution in the config "
-            "file. If unspecified, we won't store the solution."
+    config_file_path: Annotated[Path, typer.Argument(help="Path to the config file.")],
+    n_recipients: Annotated[int, typer.Option(help="Number of recipients.")] = 1,
+    solution_key: Annotated[
+        Optional[str],
+        typer.Option(
+            help=(
+                "Relationship key to use when storing the solution in the config "
+                "file. If unspecified, we won't store the solution."
+            ),
         ),
-    ),
-    display: bool = typer.Argument(
-        default=False, help="Plot and display the solution."
-    ),
+    ] = None,
+    display: Annotated[
+        bool, typer.Option(help="Plot and display the solution.")
+    ] = False,
 ) -> None:
     """Generate a new secret santa solution."""
 
-    logging.info(f"Loading config file: {config_file_path}")
+    console.log(f"Loading config file: {config_file_path}")
     with config_file_path.open() as fp:
         config = Config.model_validate_json(fp.read())
 
-    logging.info(f"Generating solution ({n_recipients} recipients)")
+    console.log(f"Generating solution ({n_recipients} recipients)")
     solution = Solution.generate(config=config, n_recipients=n_recipients)
 
     if solution_key is not None:
-        logging.info(f"Saving solution (key: {solution_key})")
+        console.log(f"Saving solution (key: {solution_key})")
 
     if display is True:
-        logging.info("Displaying solution")
+        console.log("Displaying solution")
         solution.display()
 
 
@@ -50,17 +53,16 @@ def display_solution(
 ) -> None:
     """Visualise an existing santa solution."""
 
-    logging.info(f"Loading config file: {config_file_path}")
+    console.log(f"Loading config file: {config_file_path}")
     with config_file_path.open() as fp:
         config = Config.model_validate_json(fp.read())
 
-    logging.info(f"Loading solution (key: {solution_key})")
+    console.log(f"Loading solution (key: {solution_key})")
     solution = Solution.load(config=config, solution_key=solution_key)
 
-    logging.info("Displaying solution")
+    console.log("Displaying solution")
     solution.display()
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
     app()
