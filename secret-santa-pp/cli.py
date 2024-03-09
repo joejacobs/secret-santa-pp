@@ -36,12 +36,18 @@ def generate_solution(
     console.log(f"Generating solution ({n_recipients} recipients)")
     solution = Solution.generate(config=config, n_recipients=n_recipients)
 
-    if solution_key is not None:
-        console.log(f"Saving solution (key: {solution_key})")
-
     if display is True:
         console.log("Displaying solution")
         solution.display()
+
+    if solution_key is not None:
+        confirmation = typer.confirm("Would you like to update the config file with this solution?", default=False)
+        if confirmation is True:
+            console.log(f"Updating config with solution (key: {solution_key})")
+            config.update_with_graph(solution.graph, solution_key)
+
+            with config_file_path.open(mode="w+") as fp:
+                fp.write(config.model_dump_json(indent=2))
 
 
 @app.command()

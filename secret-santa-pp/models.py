@@ -39,6 +39,19 @@ class Config(BaseModel):
     people: list[Person]
     constraints: list[Constraint]
 
+    def update_with_graph(self, graph: nx.DiGraph, key: str) -> None:
+        for person in self.people:
+            person.relationships[key] = list(graph[person.name])
+
+    def load_graph(self, key: str) -> nx.DiGraph:
+        graph = nx.DiGraph()
+        for person in self.people:
+            if (recipients := person.relationships.get(key)) is not None:
+                for recipient in recipients:
+                    graph.add_edge(person.name, recipient)
+
+        return graph
+
 
 def tsp_solver(graph: nx.DiGraph, weight: str) -> list[str]:
     return nx.approximation.simulated_annealing_tsp(
@@ -62,7 +75,16 @@ class Solution(BaseModel):
 
     @classmethod
     def load(cls, config: Config, solution_key: str) -> "Solution":
-        pass
+        graph = config.load_graph(solution_key)
+        if len(graph.edges) == 0:
+            msg = f"Solution key not found: {solution_key}."
+            raise LookupError(msg)
+
+        return cls(
+            graph=graph,
+            config=config,
+            n_recipients=len(graph[list(graph.nodes)[0]]),
+        )
 
     def _init_graph(self) -> None:
         n_people = len(self.config.people)
