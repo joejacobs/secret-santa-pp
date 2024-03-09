@@ -2,6 +2,7 @@ from copy import deepcopy
 from typing import Any, Literal
 
 import networkx as nx
+from matplotlib import pyplot as plt
 from pydantic import BaseModel, ConfigDict, EmailStr
 
 
@@ -52,9 +53,16 @@ class Solution(BaseModel):
     n_recipients: int
     graph: nx.DiGraph = nx.DiGraph()
 
-    def model_post_init(self, _: Any) -> None:
-        self._init_graph()
-        self._generate_solution()
+    @classmethod
+    def generate(cls, config: Config, n_recipients: int) -> "Solution":
+        solution = cls(config=config, n_recipients=n_recipients)
+        solution._init_graph()
+        solution._generate_solution()
+        return solution
+
+    @classmethod
+    def load(cls, config: Config, solution_key: str) -> "Solution":
+        pass
 
     def _init_graph(self) -> None:
         n_people = len(self.config.people)
@@ -109,3 +117,9 @@ class Solution(BaseModel):
                 raise RuntimeError(msg)
 
         self.graph = final_graph
+
+    def display(self) -> None:
+        pos = nx.shell_layout(self.graph)
+        nx.draw(self.graph, pos, node_size=1000, font_size=16)
+        nx.draw_networkx_labels(self.graph, pos)
+        plt.show()
