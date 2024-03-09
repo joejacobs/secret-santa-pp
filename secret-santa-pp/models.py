@@ -2,7 +2,6 @@ from copy import deepcopy
 from typing import Any, Literal
 
 import networkx as nx
-import numpy as np
 from pydantic import BaseModel, ConfigDict, EmailStr
 
 
