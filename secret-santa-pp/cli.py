@@ -19,7 +19,7 @@ def visualise_graph(config_file_path: Path) -> None:
         config = Config.model_validate_json(fp.read())
 
     logging.info("INIT")
-    solution = Solution(config, 3)
+    solution = Solution(config=config, n_recipients=3)
 
     console.log(solution.graph.edges)
 

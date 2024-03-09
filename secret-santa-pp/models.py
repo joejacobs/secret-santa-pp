@@ -41,24 +41,17 @@ class Config(BaseModel):
 
 
 def tsp_solver(graph: nx.DiGraph, weight: str) -> list[str]:
-    return nx.approximation.simulated_annealing_tsp(graph, "greedy", weight, temp=1000)
+    return nx.approximation.simulated_annealing_tsp(
+        graph, "greedy", weight=weight, max_iterations=100, N_inner=1000
+    )
 
 
 class Solution(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     config: Config
-    graph: nx.DiGraph
     n_recipients: int
-    rng: np.random.Generator
-
-    def __init__(self, config: Config, n_recipients: int, seed: int = 0) -> None:
-        super().__init__(
-            config=config,
-            graph=nx.DiGraph(),
-            n_recipients=n_recipients,
-            rng=np.random.default_rng(seed=seed),
-        )
+    graph: nx.DiGraph = nx.DiGraph()
 
     def model_post_init(self, _: Any) -> None:
         self._init_graph()
@@ -102,7 +95,6 @@ class Solution(BaseModel):
     def _generate_solution(self) -> None:
         final_graph = nx.DiGraph()
         init_graph = deepcopy(self.graph)
-
         for _ in range(self.n_recipients):
             tsp_path = nx.approximation.traveling_salesman_problem(
                 deepcopy(init_graph), cycle=True, method=tsp_solver
@@ -111,5 +103,13 @@ class Solution(BaseModel):
             for src, dst in zip(tsp_path[:-1], tsp_path[1:]):
                 final_graph.add_edge(src, dst, weight=self.graph[src][dst]["weight"])
                 init_graph.remove_edge(src, dst)
+
+        for node in final_graph.nodes:
+            if (
+                final_graph.in_degree(node) != self.n_recipients
+                or final_graph.out_degree(node) != self.n_recipients
+            ):
+                msg = f"Invalid solution: {final_graph.edges}"
+                raise RuntimeError(msg)
 
         self.graph = final_graph
