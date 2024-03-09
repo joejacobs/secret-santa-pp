@@ -65,15 +65,13 @@ class Solution(BaseModel):
             for id2 in range(id1 + 1, n_people):
                 person2 = self.config.people[id2]
 
-                weight = self._generate_edge_weight(person1, person2)
-                if weight > 0:
+                if (weight := self._get_edge_weight(person1, person2)) > 0:
                     self.graph.add_edge(person1.name, person2.name, weight=weight)
 
-                weight = self._generate_edge_weight(person2, person1)
-                if weight > 0:
+                if (weight := self._get_edge_weight(person2, person1)) > 0:
                     self.graph.add_edge(person2.name, person1.name, weight=weight)
 
-    def _generate_edge_weight(self, src_person: Person, dst_person: Person) -> int:
+    def _get_edge_weight(self, src_person: Person, dst_person: Person) -> int:
         weight = 1
 
         if len(src_person.relationships) == 0:
