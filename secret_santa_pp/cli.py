@@ -4,7 +4,8 @@ from typing import Annotated, Optional
 import typer
 from rich.console import Console
 
-from secret_santa_pp.models import Config, Solution
+from secret_santa_pp.config import Config
+from secret_santa_pp.solution import Solution
 
 app = typer.Typer()
 console = Console()
