@@ -1,7 +1,8 @@
+import networkx as nx
 import pytest
 
 from secret_santa_pp.config import ComparatorType
-from tests.helper.config import MockConstraint, MockPerson
+from tests.helper.config import MockConfig, MockConstraint, MockPerson
 
 
 @pytest.mark.parametrize(
@@ -118,3 +119,57 @@ def test_constraint_meet_criterion(
     ).get_model()
 
     assert constraint.meet_criterion(person1, person2) == expected_result
+
+
+def test_config_update_with_graph():
+    config = MockConfig(
+        people=[
+            MockPerson(name=str(i), relationships={"key": ["99"]}) for i in range(10)
+        ],
+    ).get_model()
+
+    path = [str(i) for i in range(5)] + [str(i) for i in range(2)]
+    src_dst_list_map = {i: [j, k] for i, j, k in zip(path[:-2], path[1:-1], path[2:])}
+
+    graph = nx.DiGraph()
+    for src, dst_list in src_dst_list_map.items():
+        for dst in dst_list:
+            graph.add_edge(src, dst)
+
+    config.update_with_graph(graph, "new-key")
+
+    for person in config.people:
+        if (dst_list := src_dst_list_map.get(person.name)) is None:
+            assert "new-key" not in person.relationships
+        else:
+            assert person.relationships["new-key"] == dst_list
+
+
+def test_config_load_graph():
+    path = [str(i) for i in range(5)] + [str(i) for i in range(2)]
+    src_dst_list_map = {i: [j, k] for i, j, k in zip(path[:-2], path[1:-1], path[2:])}
+
+    config = MockConfig(
+        people=[
+            *[
+                MockPerson(
+                    name=str(i),
+                    relationships={
+                        "key": ["99"],
+                        "graph-key": src_dst_list_map.get(str(i), []),
+                    },
+                )
+                for i in range(10)
+            ],
+            *[
+                MockPerson(name=str(i), relationships={"key": ["99"]})
+                for i in range(10, 15)
+            ],
+        ]
+    ).get_model()
+
+    graph = config.load_graph("graph-key")
+
+    assert len(graph.nodes) == len(src_dst_list_map)
+    for node in graph.nodes:
+        assert list(graph[node]) == src_dst_list_map[node]

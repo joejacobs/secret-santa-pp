@@ -60,13 +60,13 @@ class Config(BaseModel):
 
     def update_with_graph(self, graph: nx.DiGraph, key: str) -> None:
         for person in self.people:
-            person.relationships[key] = list(graph[person.name])
+            if person.name in graph.nodes:
+                person.relationships[key] = list(graph[person.name])
 
     def load_graph(self, key: str) -> nx.DiGraph:
         graph = nx.DiGraph()
         for person in self.people:
-            if (recipients := person.relationships.get(key)) is not None:
-                for recipient in recipients:
-                    graph.add_edge(person.name, recipient)
+            for recipient in person.relationships.get(key, []):
+                graph.add_edge(person.name, recipient)
 
         return graph
