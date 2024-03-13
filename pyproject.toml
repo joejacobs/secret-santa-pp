@@ -8,12 +8,12 @@ license = "AGPL-3.0-or-later"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-typer = "^0.9.0"
-rich = "^13.7.1"
-networkx = "^3.2.1"
-matplotlib = "^3.8.3"
-scipy = "^1.12.0"
-pydantic = {version = "^2.6.4", extras = ["email"]}
+typer = "*"
+rich = "*"
+networkx = "*"
+matplotlib = "*"
+scipy = "*"
+pydantic = {version = "*", extras = ["email"]}
 
 [tool.poetry.group.test.dependencies]
 pytest = "*"
