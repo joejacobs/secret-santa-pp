@@ -4,6 +4,12 @@ import networkx as nx
 from pydantic import BaseModel, EmailStr
 
 
+ComparatorType = Literal[
+    "one-way contains", "two-way contains", "either contains", "equality"
+]
+LimitType = Literal["exclude", "low-probability", "medium-probability"]
+
+
 class Person(BaseModel):
     name: str
     email: EmailStr
@@ -11,25 +17,39 @@ class Person(BaseModel):
 
 
 class Constraint(BaseModel):
-    relationship: str
-    comparator: Literal["one-way contains", "two-way contains", "equality"]
-    limit: Literal["exclude", "low-probability", "medium-probability"]
+    relationship_key: str
+    comparator: ComparatorType
+    limit: LimitType
 
     def meet_criterion(self, src_person: Person, dst_person: Person) -> bool:
         if (
-            src_relationship := src_person.relationships.get(self.relationship)
-        ) is None:
+            len(
+                src_relationship := src_person.relationships.get(
+                    self.relationship_key, []
+                )
+            )
+            == 0
+        ):
             return False
 
-        dst_relationship = dst_person.relationships.get(self.relationship, [])
+        dst_relationship = dst_person.relationships.get(self.relationship_key, [])
 
         if self.comparator == "equality":
-            return src_relationship == dst_relationship
+            return len(dst_relationship) > 0 and src_relationship == dst_relationship
 
         meet_criterion = dst_person.name in src_relationship
 
-        if self.comparator == "two-way contains":
-            meet_criterion |= src_person.name in dst_relationship
+        if self.comparator == "one-way contains":
+            return meet_criterion
+
+        opposite_contains = (
+            len(dst_relationship) > 0 and src_person.name in dst_relationship
+        )
+
+        if self.comparator == "either contains":
+            meet_criterion |= opposite_contains
+        elif self.comparator == "two-way contains":
+            meet_criterion &= opposite_contains
 
         return meet_criterion
 
