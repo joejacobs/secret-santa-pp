@@ -1,11 +1,10 @@
 [tool.poetry]
-name = "SecretSanta++"
+name = "secret-santa-pp"
 version = "1.0.0"
 description = "Secret santa with a few extra bells and whistles"
 authors = ["Joe Jacobs <git@hazardcell.com>"]
 readme = "README.md"
 license = "AGPL-3.0-or-later"
-package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.12"
