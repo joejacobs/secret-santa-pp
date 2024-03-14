@@ -42,19 +42,19 @@ class Solution(BaseModel):
 
     def _init_graph(self) -> None:
         n_people = len(self.config.people)
-        for id1 in range(n_people):
-            person1 = self.config.people[id1]
+        for i in range(n_people):
+            person1 = self.config.people[i]
 
-            for id2 in range(id1 + 1, n_people):
-                person2 = self.config.people[id2]
+            for j in range(i + 1, n_people):
+                person2 = self.config.people[j]
 
-                if (weight := self._get_edge_weight(person1, person2)) > 0:
+                if (weight := self._get_edge_weight(person1, person2)) is not None:
                     self.graph.add_edge(person1.name, person2.name, weight=weight)
 
-                if (weight := self._get_edge_weight(person2, person1)) > 0:
+                if (weight := self._get_edge_weight(person2, person1)) is not None:
                     self.graph.add_edge(person2.name, person1.name, weight=weight)
 
-    def _get_edge_weight(self, src_person: Person, dst_person: Person) -> int:
+    def _get_edge_weight(self, src_person: Person, dst_person: Person) -> int | None:
         weight = 1
 
         if len(src_person.relationships) == 0:
@@ -63,7 +63,7 @@ class Solution(BaseModel):
         for constraint in self.config.constraints:
             if constraint.meet_criterion(src_person, dst_person):
                 if constraint.limit == "exclude":
-                    return -1
+                    return None
 
                 if constraint.limit == "low-probability":
                     weight += 4
