@@ -3,7 +3,9 @@ orbs:
   python: circleci/python@2.1.1
 jobs:
   test:
-    executor: python/default
+    executor:
+      name: python/default
+      tag: '3.12'
     steps:
       - checkout
       - python/install-packages:
