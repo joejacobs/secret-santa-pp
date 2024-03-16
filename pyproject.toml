@@ -17,6 +17,7 @@ typer = "*"
 
 [tool.poetry.group.test.dependencies]
 pytest = "*"
+pytest-cov = "*"
 
 
 [build-system]
