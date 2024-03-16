@@ -1,7 +1,7 @@
 from copy import deepcopy
 
-import networkx as nx
 from matplotlib import pyplot as plt
+import networkx as nx
 from pydantic import BaseModel, ConfigDict
 
 from secret_santa_pp.config import Config, Person
@@ -35,9 +35,7 @@ class Solution(BaseModel):
             raise LookupError(msg)
 
         return cls(
-            graph=graph,
-            config=config,
-            n_recipients=len(graph[list(graph.nodes)[0]]),
+            graph=graph, config=config, n_recipients=len(graph[list(graph.nodes)[0]])
         )
 
     def _init_graph(self) -> None:

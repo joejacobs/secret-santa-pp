@@ -1,8 +1,8 @@
 from pathlib import Path
 from typing import Annotated, Optional
 
-import typer
 from rich.console import Console
+import typer
 
 from secret_santa_pp.config import Config
 from secret_santa_pp.solution import Solution
@@ -21,7 +21,7 @@ def generate_solution(
             help=(
                 "Relationship key to use when storing the solution in the config "
                 "file. If unspecified, we won't store the solution."
-            ),
+            )
         ),
     ] = None,
     display: Annotated[
@@ -58,7 +58,7 @@ def generate_solution(
 def display_solution(
     config_file_path: Path = typer.Argument(help="Path to the config file."),
     solution_key: str = typer.Argument(
-        help="The key under which the solution is stored in the config file.",
+        help="The key under which the solution is stored in the config file."
     ),
 ) -> None:
     """Visualise an existing santa solution."""

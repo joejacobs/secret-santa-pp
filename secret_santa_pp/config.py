@@ -3,7 +3,6 @@ from typing import Literal
 import networkx as nx
 from pydantic import BaseModel, EmailStr
 
-
 ComparatorType = Literal[
     "one-way contains", "two-way contains", "either contains", "equality"
 ]

@@ -8,9 +8,7 @@ class TemplateManager(BaseModel):
     common_template_data: dict[str, str] = {}
 
     def __init__(
-        self,
-        event_name: str | None = None,
-        event_date: date | None = None,
+        self, event_name: str | None = None, event_date: date | None = None
     ) -> None:
         common_template_data = {
             "days_to_christmas": self._get_days_delta_text(
@@ -42,11 +40,7 @@ class TemplateManager(BaseModel):
     def _get_current_year(self) -> int:
         return date.today().year
 
-    def populate(
-        self,
-        template_data: dict[str, str],
-        text: str,
-    ) -> str:
+    def populate(self, template_data: dict[str, str], text: str) -> str:
         combined_template_data = template_data | self.common_template_data
         return text.format(**combined_template_data)
 

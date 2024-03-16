@@ -5,6 +5,7 @@ lint-fix:
 	poetry run ruff check --fix
 
 format:
+	poetry run ruff check --select I --fix
 	poetry run ruff format
 
 test:

@@ -4,13 +4,7 @@ from typing import Generic, TypeVar
 
 from pydantic import BaseModel, EmailStr
 
-from secret_santa_pp.config import (
-    ComparatorType,
-    Config,
-    Constraint,
-    LimitType,
-    Person,
-)
+from secret_santa_pp.config import ComparatorType, Config, Constraint, LimitType, Person
 
 T = TypeVar("T")
 
@@ -40,9 +34,7 @@ class MockPerson(Mock[Person]):
 
     def _create_model(self) -> Person:
         return Person(
-            name=self.name,
-            email=self.email,
-            relationships=self.relationships,
+            name=self.name, email=self.email, relationships=self.relationships
         )
 
     def assert_equivalent(self, other: Person) -> None:

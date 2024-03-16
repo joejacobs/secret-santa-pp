@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-from emailer import Emailer
-from messageconstructor import MessageConstructor
-from secretsantagraph import SecretSantaGraph
-
 import argparse
 import getpass
 import io
 import json
 import os
+
+from emailer import Emailer
+from messageconstructor import MessageConstructor
+from secretsantagraph import SecretSantaGraph
 
 
 def argument_parser():
@@ -69,10 +69,7 @@ def argument_parser():
         help=("Path to a text file containing the notification " "email message"),
     )
     p.add_argument(
-        "-en",
-        "--email-sender",
-        type=str,
-        help="Name of the person sending the email",
+        "-en", "--email-sender", type=str, help="Name of the person sending the email"
     )
     p.add_argument(
         "-es",
@@ -115,10 +112,7 @@ def argument_parser():
         help=("Save the solution into the people data JSON file " "under this key"),
     )
     p.add_argument(
-        "-sa",
-        "--smtp-address",
-        type=str,
-        help="Address of the SMTP server to use",
+        "-sa", "--smtp-address", type=str, help="Address of the SMTP server to use"
     )
     p.add_argument(
         "-sp",
@@ -292,10 +286,7 @@ def main():
             print("Load HTML email message: {}".format(args.email_html))
             with io.open(args.email_html, mode="r", encoding="utf-8") as fp:
                 html_constructor = MessageConstructor(
-                    fp.read(),
-                    args.limit_value,
-                    args.limit_currency,
-                    limit_display,
+                    fp.read(), args.limit_value, args.limit_currency, limit_display
                 )
 
         # initialise the emailer

@@ -2,6 +2,7 @@ import networkx as nx
 import pytest
 
 from secret_santa_pp.config import ComparatorType
+
 from tests.helper.config import MockConfig, MockConstraint, MockPerson
 
 
@@ -9,11 +10,7 @@ from tests.helper.config import MockConfig, MockConstraint, MockPerson
     ("relationship_params", "comparator", "expected_result"),
     [
         *[
-            (
-                relationship_tuple,
-                comparator,
-                False,
-            )
+            (relationship_tuple, comparator, False)
             for comparator in [
                 "one-way contains",
                 "two-way contains",
@@ -49,24 +46,15 @@ from tests.helper.config import MockConfig, MockConstraint, MockPerson
             ]
             for relationship_tuple in [
                 (
-                    {
-                        "key": ["person-2", "person-3"],
-                        "other-key": ["person-3"],
-                    },
+                    {"key": ["person-2", "person-3"], "other-key": ["person-3"]},
                     {"other-key": ["person-2"]},
                 ),
                 (
-                    {
-                        "key": ["person-2", "person-3"],
-                        "other-key": ["person-3"],
-                    },
+                    {"key": ["person-2", "person-3"], "other-key": ["person-3"]},
                     {"key": [], "other-key": ["person-3"]},
                 ),
                 (
-                    {
-                        "key": ["person-2", "person-3"],
-                        "other-key": ["person-3"],
-                    },
+                    {"key": ["person-2", "person-3"], "other-key": ["person-3"]},
                     {"key": ["person-3"], "other-key": ["person-3"]},
                 ),
             ]
@@ -87,15 +75,9 @@ from tests.helper.config import MockConfig, MockConstraint, MockPerson
             ]
             for relationship_tuple in [
                 (
-                    {
-                        "key": ["person-2", "person-3"],
-                        "other-key": ["person-3"],
-                    },
-                    {
-                        "key": ["person-1", "person-3"],
-                        "other-key": ["person-3"],
-                    },
-                ),
+                    {"key": ["person-2", "person-3"], "other-key": ["person-3"]},
+                    {"key": ["person-1", "person-3"], "other-key": ["person-3"]},
+                )
             ]
         ],
         # equality relationship
@@ -109,15 +91,9 @@ from tests.helper.config import MockConfig, MockConstraint, MockPerson
             ]
             for relationship_tuple in [
                 (
-                    {
-                        "key": ["person-3", "person-4"],
-                        "other-key": ["person-2"],
-                    },
-                    {
-                        "key": ["person-3", "person-4"],
-                        "other-key": ["person-1"],
-                    },
-                ),
+                    {"key": ["person-3", "person-4"], "other-key": ["person-2"]},
+                    {"key": ["person-3", "person-4"], "other-key": ["person-1"]},
+                )
             ]
         ],
     ],
@@ -135,8 +111,7 @@ def test_constraint_meet_criterion(
     ).get_model()
 
     constraint = MockConstraint(
-        relationship_key="key",
-        comparator=comparator,
+        relationship_key="key", comparator=comparator
     ).get_model()
 
     assert constraint.meet_criterion(person1, person2) == expected_result
@@ -146,7 +121,7 @@ def test_config_update_with_graph():
     config = MockConfig(
         people=[
             MockPerson(name=str(i), relationships={"key": ["99"]}) for i in range(10)
-        ],
+        ]
     ).get_model()
 
     path = [str(i) for i in range(5)] + [str(i) for i in range(2)]
