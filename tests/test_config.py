@@ -49,15 +49,24 @@ from tests.helper.config import MockConfig, MockConstraint, MockPerson
             ]
             for relationship_tuple in [
                 (
-                    {"key": ["person-2", "person-3"], "other-key": ["person-3"]},
+                    {
+                        "key": ["person-2", "person-3"],
+                        "other-key": ["person-3"],
+                    },
                     {"other-key": ["person-2"]},
                 ),
                 (
-                    {"key": ["person-2", "person-3"], "other-key": ["person-3"]},
+                    {
+                        "key": ["person-2", "person-3"],
+                        "other-key": ["person-3"],
+                    },
                     {"key": [], "other-key": ["person-3"]},
                 ),
                 (
-                    {"key": ["person-2", "person-3"], "other-key": ["person-3"]},
+                    {
+                        "key": ["person-2", "person-3"],
+                        "other-key": ["person-3"],
+                    },
                     {"key": ["person-3"], "other-key": ["person-3"]},
                 ),
             ]
@@ -78,8 +87,14 @@ from tests.helper.config import MockConfig, MockConstraint, MockPerson
             ]
             for relationship_tuple in [
                 (
-                    {"key": ["person-2", "person-3"], "other-key": ["person-3"]},
-                    {"key": ["person-1", "person-3"], "other-key": ["person-3"]},
+                    {
+                        "key": ["person-2", "person-3"],
+                        "other-key": ["person-3"],
+                    },
+                    {
+                        "key": ["person-1", "person-3"],
+                        "other-key": ["person-3"],
+                    },
                 ),
             ]
         ],
@@ -94,8 +109,14 @@ from tests.helper.config import MockConfig, MockConstraint, MockPerson
             ]
             for relationship_tuple in [
                 (
-                    {"key": ["person-3", "person-4"], "other-key": ["person-2"]},
-                    {"key": ["person-3", "person-4"], "other-key": ["person-1"]},
+                    {
+                        "key": ["person-3", "person-4"],
+                        "other-key": ["person-2"],
+                    },
+                    {
+                        "key": ["person-3", "person-4"],
+                        "other-key": ["person-1"],
+                    },
                 ),
             ]
         ],

@@ -17,9 +17,19 @@ class Emailer(object):
     _reply_email = None
     _smtp = None
 
-    def __init__(self, smtp_host, smtp_port, smtp_username, smtp_password,
-                 sender_email, sender_name, reply_email, sub_constructor,
-                 msg_constructor, html_constructor):
+    def __init__(
+        self,
+        smtp_host,
+        smtp_port,
+        smtp_username,
+        smtp_password,
+        sender_email,
+        sender_name,
+        reply_email,
+        sub_constructor,
+        msg_constructor,
+        html_constructor,
+    ):
         # validate email addresses and port number
         self._email_regex = re.compile(r"[^@]+@[^@]+\.[^@]+")
         assert self._email_regex.match(sender_email)

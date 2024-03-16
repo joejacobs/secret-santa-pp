@@ -19,8 +19,9 @@ def _rev_replace(s, old, new, occurrence):
 class MessageConstructor(object):
     _msg = None
 
-    def __init__(self, msg, limit_value=None, limit_currency=None,
-                 display_currencies=[]):
+    def __init__(
+        self, msg, limit_value=None, limit_currency=None, display_currencies=[]
+    ):
         # message cannot be blank
         assert msg
         assert len(msg.strip())

@@ -11,65 +11,155 @@ import os
 
 
 def argument_parser():
-    p = argparse.ArgumentParser(description=("Generate secret santa pairings "
-                                             "and send everyone notification "
-                                             "emails."))
-    p.add_argument("n_recipients", type=int,
-                   help="Number of recipients per gifter")
-    p.add_argument("people_data_json", type=str,
-                   help="Path to a JSON file containing participant json data")
-    p.add_argument("-cl", "--low-prob-criteria", type=str,
-                   help=("Path to a headerless CSV file containing the "
-                         "low-probability criteria"))
-    p.add_argument("-cm", "--medium-prob-criteria", type=str,
-                   help=("Path to a headerless CSV file containing the "
-                         "medium-probability criteria"))
-    p.add_argument("-cx", "--exclusion-criteria", type=str,
-                   help=("Path to a headerless CSV file containing the "
-                         "exclusion criteria"))
-    p.add_argument("-ea", "--email-address", type=str,
-                   help="Email address used to send the notification emails")
-    p.add_argument("-ehtml", "--email-html", type=str,
-                   help=("Path to a HTML file containing the HTML version of "
-                         "the notification email message"))
-    p.add_argument("-em", "--email-message", type=str,
-                   help=("Path to a text file containing the notification "
-                         "email message"))
-    p.add_argument("-en", "--email-sender", type=str,
-                   help="Name of the person sending the email")
-    p.add_argument("-es", "--email-subject", type=str,
-                   help=("Path to a text file containing the notification "
-                         "email subject"))
-    p.add_argument("-lc", "--limit-currency", type=str,
-                   help="The currency of the spending limit specified")
-    p.add_argument("-ld", "--limit-display", type=str,
-                   help=("The currencies in which to display the spending "
-                         "limit in the email, comma separated, no spaces"))
+    p = argparse.ArgumentParser(
+        description=(
+            "Generate secret santa pairings "
+            "and send everyone notification "
+            "emails."
+        )
+    )
+    p.add_argument("n_recipients", type=int, help="Number of recipients per gifter")
+    p.add_argument(
+        "people_data_json",
+        type=str,
+        help="Path to a JSON file containing participant json data",
+    )
+    p.add_argument(
+        "-cl",
+        "--low-prob-criteria",
+        type=str,
+        help=(
+            "Path to a headerless CSV file containing the " "low-probability criteria"
+        ),
+    )
+    p.add_argument(
+        "-cm",
+        "--medium-prob-criteria",
+        type=str,
+        help=(
+            "Path to a headerless CSV file containing the "
+            "medium-probability criteria"
+        ),
+    )
+    p.add_argument(
+        "-cx",
+        "--exclusion-criteria",
+        type=str,
+        help=("Path to a headerless CSV file containing the " "exclusion criteria"),
+    )
+    p.add_argument(
+        "-ea",
+        "--email-address",
+        type=str,
+        help="Email address used to send the notification emails",
+    )
+    p.add_argument(
+        "-ehtml",
+        "--email-html",
+        type=str,
+        help=(
+            "Path to a HTML file containing the HTML version of "
+            "the notification email message"
+        ),
+    )
+    p.add_argument(
+        "-em",
+        "--email-message",
+        type=str,
+        help=("Path to a text file containing the notification " "email message"),
+    )
+    p.add_argument(
+        "-en",
+        "--email-sender",
+        type=str,
+        help="Name of the person sending the email",
+    )
+    p.add_argument(
+        "-es",
+        "--email-subject",
+        type=str,
+        help=("Path to a text file containing the notification " "email subject"),
+    )
+    p.add_argument(
+        "-lc",
+        "--limit-currency",
+        type=str,
+        help="The currency of the spending limit specified",
+    )
+    p.add_argument(
+        "-ld",
+        "--limit-display",
+        type=str,
+        help=(
+            "The currencies in which to display the spending "
+            "limit in the email, comma separated, no spaces"
+        ),
+    )
     p.add_argument("-lv", "--limit-value", type=int, help="Spending limit")
-    p.add_argument("-p", "--participants", type=str,
-                   help=("Path to a text file containing the list of "
-                         "participants"))
-    p.add_argument("-ra", "--reply-address", type=str,
-                   help="Specify an email reply-to address if required")
-    p.add_argument("-s", "--save-as", type=str,
-                   help=("Save the solution into the people data JSON file "
-                         "under this key"))
-    p.add_argument("-sa", "--smtp-address", type=str,
-                   help="Address of the SMTP server to use")
-    p.add_argument("-sp", "--smtp-port", type=int, default=587,
-                   help="Port to connect to on the SMTP server")
-    p.add_argument("-su", "--smtp-username", type=str,
-                   help=("Username for logging into the SMTP server, defaults "
-                         "to the email address if unspecified"))
-    p.add_argument("-v", "--visualise", dest="visualise_graph",
-                   action="store_true", help="Visualise graph")
+    p.add_argument(
+        "-p",
+        "--participants",
+        type=str,
+        help=("Path to a text file containing the list of " "participants"),
+    )
+    p.add_argument(
+        "-ra",
+        "--reply-address",
+        type=str,
+        help="Specify an email reply-to address if required",
+    )
+    p.add_argument(
+        "-s",
+        "--save-as",
+        type=str,
+        help=("Save the solution into the people data JSON file " "under this key"),
+    )
+    p.add_argument(
+        "-sa",
+        "--smtp-address",
+        type=str,
+        help="Address of the SMTP server to use",
+    )
+    p.add_argument(
+        "-sp",
+        "--smtp-port",
+        type=int,
+        default=587,
+        help="Port to connect to on the SMTP server",
+    )
+    p.add_argument(
+        "-su",
+        "--smtp-username",
+        type=str,
+        help=(
+            "Username for logging into the SMTP server, defaults "
+            "to the email address if unspecified"
+        ),
+    )
+    p.add_argument(
+        "-v",
+        "--visualise",
+        dest="visualise_graph",
+        action="store_true",
+        help="Visualise graph",
+    )
 
     g = p.add_mutually_exclusive_group(required=True)
-    g.add_argument("-i", "--input-file", type=str,
-                   help=("Load an existing solution from this file, no new "
-                         "solution will be generated"))
-    g.add_argument("-o", "--output-file", type=str,
-                   help="Generate a solution and write it to this file")
+    g.add_argument(
+        "-i",
+        "--input-file",
+        type=str,
+        help=(
+            "Load an existing solution from this file, no new "
+            "solution will be generated"
+        ),
+    )
+    g.add_argument(
+        "-o",
+        "--output-file",
+        type=str,
+        help="Generate a solution and write it to this file",
+    )
 
     p.set_defaults(visualise_graph=False)
 
@@ -119,10 +209,13 @@ def main():
         med_prob = load_criteria(args.medium_prob_criteria)
 
     print("Construct SecretSantaGraph object")
-    ss_graph = SecretSantaGraph(people_data, args.n_recipients,
-                                exclusion_criteria=exclusion,
-                                low_prob_criteria=low_prob,
-                                medium_prob_criteria=med_prob)
+    ss_graph = SecretSantaGraph(
+        people_data,
+        args.n_recipients,
+        exclusion_criteria=exclusion,
+        low_prob_criteria=low_prob,
+        medium_prob_criteria=med_prob,
+    )
 
     if args.input_file:
         print("Load existing solution: {}".format(args.input_file))
@@ -183,37 +276,47 @@ def main():
 
         print("Load email subject: {}".format(args.email_subject))
         with io.open(args.email_subject, mode="r", encoding="utf-8") as fp:
-            sub_constructor = MessageConstructor(fp.read(), args.limit_value,
-                                                 args.limit_currency,
-                                                 limit_display)
+            sub_constructor = MessageConstructor(
+                fp.read(), args.limit_value, args.limit_currency, limit_display
+            )
 
         print("Load email message: {}".format(args.email_message))
         with io.open(args.email_message, mode="r", encoding="utf-8") as fp:
-            msg_constructor = MessageConstructor(fp.read(), args.limit_value,
-                                                 args.limit_currency,
-                                                 limit_display)
+            msg_constructor = MessageConstructor(
+                fp.read(), args.limit_value, args.limit_currency, limit_display
+            )
 
         html_constructor = None
 
         if args.email_html:
             print("Load HTML email message: {}".format(args.email_html))
             with io.open(args.email_html, mode="r", encoding="utf-8") as fp:
-                html_constructor = MessageConstructor(fp.read(),
-                                                      args.limit_value,
-                                                      args.limit_currency,
-                                                      limit_display)
+                html_constructor = MessageConstructor(
+                    fp.read(),
+                    args.limit_value,
+                    args.limit_currency,
+                    limit_display,
+                )
 
         # initialise the emailer
-        print("Initialise emailer: {}:{}".format(args.smtp_address,
-                                                 args.smtp_port))
-        emailer = Emailer(args.smtp_address, args.smtp_port, smtp_username,
-                          smtp_password, args.email_address, args.email_sender,
-                          reply_address, sub_constructor, msg_constructor,
-                          html_constructor)
+        print("Initialise emailer: {}:{}".format(args.smtp_address, args.smtp_port))
+        emailer = Emailer(
+            args.smtp_address,
+            args.smtp_port,
+            smtp_username,
+            smtp_password,
+            args.email_address,
+            args.email_sender,
+            reply_address,
+            sub_constructor,
+            msg_constructor,
+            html_constructor,
+        )
 
         for gifter, recipients in ss_graph.get_solution_arr():
             print("\tEmailing {}".format(gifter))
             emailer.send(gifter, people_data[gifter]["email"], recipients)
+
 
 if __name__ == "__main__":
     main()

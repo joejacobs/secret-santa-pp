@@ -4,7 +4,13 @@ from typing import Generic, TypeVar
 
 from pydantic import BaseModel, EmailStr
 
-from secret_santa_pp.config import ComparatorType, Config, Constraint, LimitType, Person
+from secret_santa_pp.config import (
+    ComparatorType,
+    Config,
+    Constraint,
+    LimitType,
+    Person,
+)
 
 T = TypeVar("T")
 

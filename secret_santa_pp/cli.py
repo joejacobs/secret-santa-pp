@@ -42,7 +42,10 @@ def generate_solution(
         solution.display()
 
     if solution_key is not None:
-        confirmation = typer.confirm("Would you like to update the config file with this solution?", default=False)
+        confirmation = typer.confirm(
+            "Would you like to update the config file with this solution?",
+            default=False,
+        )
         if confirmation is True:
             console.log(f"Updating config with solution (key: {solution_key})")
             config.update_with_graph(solution.graph, solution_key)
