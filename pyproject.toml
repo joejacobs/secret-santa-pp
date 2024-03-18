@@ -16,9 +16,20 @@ scipy = "*"
 typer = "*"
 
 [tool.poetry.group.test.dependencies]
+pyright = "*"
 pytest = "*"
 pytest-cov = "*"
 ruff = "*"
+
+[tool.pyright]
+pythonVersion = "3.12"
+typeCheckingMode = "strict"
+include = ["secret_santa_pp", "tests"]
+ignore = [
+  "secret_santa_pp/emailer.py",
+  "secret_santa_pp/messageconstructor.py",
+  "secret_santa_pp/secretsantapp.py",
+]
 
 [tool.ruff]
 exclude = [".coverage", ".git", ".pytest_cache", ".ruff_cache"]
