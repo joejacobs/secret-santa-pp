@@ -1,6 +1,6 @@
 from typing import Literal
 
-import networkx as nx
+from networkx import DiGraph
 from pydantic import BaseModel, EmailStr
 
 ComparatorType = Literal[
@@ -57,13 +57,13 @@ class Config(BaseModel):
     people: list[Person]
     constraints: list[Constraint]
 
-    def update_with_graph(self, graph: nx.DiGraph, key: str) -> None:
+    def update_with_graph(self, graph: DiGraph[str], key: str) -> None:
         for person in self.people:
             if person.name in graph.nodes:
                 person.relationships[key] = list(graph[person.name])
 
-    def load_graph(self, key: str) -> nx.DiGraph:
-        graph = nx.DiGraph()
+    def load_graph(self, key: str) -> DiGraph[str]:
+        graph: DiGraph[str] = DiGraph()
         for person in self.people:
             for recipient in person.relationships.get(key, []):
                 graph.add_edge(person.name, recipient)

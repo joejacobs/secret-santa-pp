@@ -1,15 +1,16 @@
 from copy import deepcopy
 from itertools import pairwise
+from typing import Any, cast
 
 from matplotlib import pyplot as plt
-import networkx as nx
+from networkx import DiGraph, approximation, draw, draw_networkx_labels, shell_layout
 from pydantic import BaseModel, ConfigDict
 
 from secret_santa_pp.config import Config, Person
 
 
-def tsp_solver(graph: nx.DiGraph, weight: str) -> list[str]:
-    return nx.approximation.simulated_annealing_tsp(
+def tsp_solver(graph: DiGraph[str], weight: str) -> list[str]:
+    return approximation.simulated_annealing_tsp(
         graph, "greedy", weight=weight, max_iterations=100, N_inner=1000
     )
 
@@ -19,7 +20,7 @@ class Solution(BaseModel):
 
     config: Config
     n_recipients: int
-    graph: nx.DiGraph = nx.DiGraph()
+    graph: DiGraph[str] = DiGraph()
 
     @classmethod
     def generate(cls, config: Config, n_recipients: int) -> "Solution":
@@ -72,29 +73,34 @@ class Solution(BaseModel):
         return weight
 
     def generate_solution(self) -> None:
-        final_graph = nx.DiGraph()
+        final_graph: DiGraph[str] = DiGraph()
         init_graph = deepcopy(self.graph)
         for _ in range(self.n_recipients):
-            tsp_path = nx.approximation.traveling_salesman_problem(
-                deepcopy(init_graph), cycle=True, method=tsp_solver
+            tsp_path: list[str] = cast(
+                list[str],
+                approximation.traveling_salesman_problem(
+                    deepcopy(init_graph), cycle=True, method=tsp_solver
+                ),
             )
 
             for src, dst in pairwise(tsp_path):
                 final_graph.add_edge(src, dst, weight=self.graph[src][dst]["weight"])
                 init_graph.remove_edge(src, dst)
 
-        for node in final_graph.nodes:
-            if (
-                final_graph.in_degree(node) != self.n_recipients
-                or final_graph.out_degree(node) != self.n_recipients
-            ):
-                msg = f"Invalid solution: {final_graph.edges}"
-                raise RuntimeError(msg)
-
+        self._verify_solution(final_graph)
         self.graph = final_graph
 
+    def _verify_solution(self, graph: DiGraph[str]) -> None:
+        for node in graph.nodes:
+            if (
+                len(graph.in_degree(node)) != self.n_recipients
+                or len(graph.out_degree(node)) != self.n_recipients
+            ):
+                msg = f"Invalid solution: {graph.edges}"
+                raise RuntimeError(msg)
+
     def display(self) -> None:
-        pos = nx.shell_layout(self.graph)
-        nx.draw(self.graph, pos, node_size=1000, font_size=16)
-        nx.draw_networkx_labels(self.graph, pos)
+        pos: Any = shell_layout(self.graph)
+        draw(self.graph, pos, node_size=1000, font_size=16)
+        draw_networkx_labels(self.graph, pos)
         plt.show()

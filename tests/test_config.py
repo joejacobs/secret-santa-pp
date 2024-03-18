@@ -1,4 +1,6 @@
-import networkx as nx
+from dataclasses import dataclass
+
+from networkx import DiGraph
 import pytest
 
 from secret_santa_pp.config import ComparatorType
@@ -6,29 +8,43 @@ from secret_santa_pp.config import ComparatorType
 from tests.helper.config import MockConfig, MockConstraint, MockPerson
 
 
+@dataclass
+class RelationshipParams:
+    relationships1: dict[str, list[str]]
+    relationships2: dict[str, list[str]]
+
+
 @pytest.mark.parametrize(
     ("relationship_params", "comparator", "expected_result"),
     [
         *[
-            (relationship_tuple, comparator, False)
+            (relationship_params, comparator, False)
             for comparator in [
                 "one-way contains",
                 "two-way contains",
                 "either contains",
                 "equality",
             ]
-            for relationship_tuple in [
+            for relationship_params in [
                 # empty relationships
-                ({}, {}),
+                RelationshipParams(relationships1={}, relationships2={}),
                 # relationship missing from one
-                ({}, {"key": []}),
-                ({"key": []}, {}),
-                ({"other-key": []}, {"key": []}),
-                ({"key": []}, {"other-key": []}),
+                RelationshipParams(relationships1={}, relationships2={"key": []}),
+                RelationshipParams(relationships1={"key": []}, relationships2={}),
+                RelationshipParams(
+                    relationships1={"other-key": []}, relationships2={"key": []}
+                ),
+                RelationshipParams(
+                    relationships1={"key": []}, relationships2={"other-key": []}
+                ),
                 # relationships missing from both
-                ({"other-key": []}, {"other-key": []}),
+                RelationshipParams(
+                    relationships1={"other-key": []}, relationships2={"other-key": []}
+                ),
                 # both relationships empty
-                ({"key": []}, {"key": []}),
+                RelationshipParams(
+                    relationships1={"key": []}, relationships2={"key": []}
+                ),
             ]
         ],
         # one-way contains relationship
@@ -45,17 +61,26 @@ from tests.helper.config import MockConfig, MockConstraint, MockPerson
                 "equality",
             ]
             for relationship_tuple in [
-                (
-                    {"key": ["person-2", "person-3"], "other-key": ["person-3"]},
-                    {"other-key": ["person-2"]},
+                RelationshipParams(
+                    relationships1={
+                        "key": ["person-2", "person-3"],
+                        "other-key": ["person-3"],
+                    },
+                    relationships2={"other-key": ["person-2"]},
                 ),
-                (
-                    {"key": ["person-2", "person-3"], "other-key": ["person-3"]},
-                    {"key": [], "other-key": ["person-3"]},
+                RelationshipParams(
+                    relationships1={
+                        "key": ["person-2", "person-3"],
+                        "other-key": ["person-3"],
+                    },
+                    relationships2={"key": [], "other-key": ["person-3"]},
                 ),
-                (
-                    {"key": ["person-2", "person-3"], "other-key": ["person-3"]},
-                    {"key": ["person-3"], "other-key": ["person-3"]},
+                RelationshipParams(
+                    relationships1={
+                        "key": ["person-2", "person-3"],
+                        "other-key": ["person-3"],
+                    },
+                    relationships2={"key": ["person-3"], "other-key": ["person-3"]},
                 ),
             ]
         ],
@@ -74,9 +99,15 @@ from tests.helper.config import MockConfig, MockConstraint, MockPerson
                 "equality",
             ]
             for relationship_tuple in [
-                (
-                    {"key": ["person-2", "person-3"], "other-key": ["person-3"]},
-                    {"key": ["person-1", "person-3"], "other-key": ["person-3"]},
+                RelationshipParams(
+                    relationships1={
+                        "key": ["person-2", "person-3"],
+                        "other-key": ["person-3"],
+                    },
+                    relationships2={
+                        "key": ["person-1", "person-3"],
+                        "other-key": ["person-3"],
+                    },
                 )
             ]
         ],
@@ -90,24 +121,30 @@ from tests.helper.config import MockConfig, MockConstraint, MockPerson
                 "equality",
             ]
             for relationship_tuple in [
-                (
-                    {"key": ["person-3", "person-4"], "other-key": ["person-2"]},
-                    {"key": ["person-3", "person-4"], "other-key": ["person-1"]},
+                RelationshipParams(
+                    relationships1={
+                        "key": ["person-3", "person-4"],
+                        "other-key": ["person-2"],
+                    },
+                    relationships2={
+                        "key": ["person-3", "person-4"],
+                        "other-key": ["person-1"],
+                    },
                 )
             ]
         ],
     ],
 )
 def test_constraint_meet_criterion(
-    relationship_params: tuple[dict[str, list[str]], dict[str, list[str]]],
+    params: RelationshipParams,
     comparator: ComparatorType,
     expected_result: bool,
 ):
     person1 = MockPerson(
-        name="person-1", relationships=relationship_params[0]
+        name="person-1", relationships=params.relationships1
     ).get_model()
     person2 = MockPerson(
-        name="person-2", relationships=relationship_params[1]
+        name="person-2", relationships=params.relationships2
     ).get_model()
 
     constraint = MockConstraint(
@@ -129,7 +166,7 @@ def test_config_update_with_graph():
         i: [j, k] for i, j, k in zip(path[:-2], path[1:-1], path[2:], strict=True)
     }
 
-    graph = nx.DiGraph()
+    graph: DiGraph[str] = DiGraph()
     for src, dst_list in src_dst_list_map.items():
         for dst in dst_list:
             graph.add_edge(src, dst)
