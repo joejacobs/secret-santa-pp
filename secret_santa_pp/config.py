@@ -3,10 +3,10 @@ from typing import Literal
 from networkx import DiGraph
 from pydantic import BaseModel, EmailStr
 
-ComparatorType = Literal[
+type ComparatorType = Literal[
     "one-way contains", "two-way contains", "either contains", "equality"
 ]
-LimitType = Literal["exclude", "low-probability", "medium-probability"]
+type LimitType = Literal["exclude", "low-probability", "medium-probability"]
 
 
 class Person(BaseModel):
