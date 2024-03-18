@@ -1,4 +1,5 @@
 from copy import deepcopy
+from itertools import pairwise
 
 from matplotlib import pyplot as plt
 import networkx as nx
@@ -23,8 +24,8 @@ class Solution(BaseModel):
     @classmethod
     def generate(cls, config: Config, n_recipients: int) -> "Solution":
         solution = cls(config=config, n_recipients=n_recipients)
-        solution._init_graph()
-        solution._generate_solution()
+        solution.init_graph()
+        solution.generate_solution()
         return solution
 
     @classmethod
@@ -35,10 +36,10 @@ class Solution(BaseModel):
             raise LookupError(msg)
 
         return cls(
-            graph=graph, config=config, n_recipients=len(graph[list(graph.nodes)[0]])
+            graph=graph, config=config, n_recipients=len(graph[next(iter(graph.nodes))])
         )
 
-    def _init_graph(self) -> None:
+    def init_graph(self) -> None:
         n_people = len(self.config.people)
         for i in range(n_people):
             person1 = self.config.people[i]
@@ -70,7 +71,7 @@ class Solution(BaseModel):
 
         return weight
 
-    def _generate_solution(self) -> None:
+    def generate_solution(self) -> None:
         final_graph = nx.DiGraph()
         init_graph = deepcopy(self.graph)
         for _ in range(self.n_recipients):
@@ -78,7 +79,7 @@ class Solution(BaseModel):
                 deepcopy(init_graph), cycle=True, method=tsp_solver
             )
 
-            for src, dst in zip(tsp_path[:-1], tsp_path[1:]):
+            for src, dst in pairwise(tsp_path):
                 final_graph.add_edge(src, dst, weight=self.graph[src][dst]["weight"])
                 init_graph.remove_edge(src, dst)
 

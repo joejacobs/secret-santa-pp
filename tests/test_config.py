@@ -125,7 +125,9 @@ def test_config_update_with_graph():
     ).get_model()
 
     path = [str(i) for i in range(5)] + [str(i) for i in range(2)]
-    src_dst_list_map = {i: [j, k] for i, j, k in zip(path[:-2], path[1:-1], path[2:])}
+    src_dst_list_map = {
+        i: [j, k] for i, j, k in zip(path[:-2], path[1:-1], path[2:], strict=True)
+    }
 
     graph = nx.DiGraph()
     for src, dst_list in src_dst_list_map.items():
@@ -143,7 +145,9 @@ def test_config_update_with_graph():
 
 def test_config_load_graph():
     path = [str(i) for i in range(5)] + [str(i) for i in range(2)]
-    src_dst_list_map = {i: [j, k] for i, j, k in zip(path[:-2], path[1:-1], path[2:])}
+    src_dst_list_map = {
+        i: [j, k] for i, j, k in zip(path[:-2], path[1:-1], path[2:], strict=True)
+    }
 
     config = MockConfig(
         people=[

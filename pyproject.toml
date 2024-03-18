@@ -9,7 +9,7 @@ license = "AGPL-3.0-or-later"
 [tool.poetry.dependencies]
 matplotlib = "*"
 networkx = "*"
-pydantic = {version = "*", extras = ["email"]}
+pydantic = { version = "*", extras = ["email"] }
 python = "^3.12"
 rich = "*"
 scipy = "*"
@@ -21,12 +21,7 @@ pytest-cov = "*"
 ruff = "*"
 
 [tool.ruff]
-exclude = [
-    ".coverage",
-    ".git",
-    ".pytest_cache",
-    ".ruff_cache",
-]
+exclude = [".coverage", ".git", ".pytest_cache", ".ruff_cache"]
 line-length = 88
 indent-width = 4
 target-version = "py312"
@@ -34,24 +29,24 @@ target-version = "py312"
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "D1",      # undocumented-### (makes docstrings compulsory)
-    "D203",    # one-blank-line-before-class (choose between this and D211)
-    "D213",    # multi-line-summary-second-line (choose between this and D212)
-    "COM812",  # missing-trailing-comma
-    "TCH",     # flake8-type-checking (want to add back in but breaks tests so need to configure properly)
-    "FBT",     # flake8-boolean-trap (would be good to add this back in)
-    "ANN101",  # missing-type-self (no need as pyright picks this up automatically)
-    "ANN102",  # missing-type-cls (no need as pyright picks this up automatically)
-    "DTZ",     # flake8-datetimez (makes timezone info compulsory)
-    "PGH003",  # blanket-type-ignore (would be good to add this back in)
-    "ANN002",  # missing-type-args
-    "ANN003",  # missing-type-kwargs
-    "PLR0913", # too-many-arguments
-    "G004",    # logging-f-string
-    "FIX",     # flake8-fixme
-    "INP001",  # implicit-namespace-package (seems to fail when running through pants but not directly with ruff)
-    "FA",      # flake8-future-annotations
-    "ISC001",  # single-line-implicit-string-concatenation
+  "D1",      # undocumented-### (makes docstrings compulsory)
+  "D203",    # one-blank-line-before-class (choose between this and D211)
+  "D213",    # multi-line-summary-second-line (choose between this and D212)
+  "COM812",  # missing-trailing-comma
+  "TCH",     # flake8-type-checking (want to add back in but breaks tests so need to configure properly)
+  "FBT",     # flake8-boolean-trap (would be good to add this back in)
+  "ANN101",  # missing-type-self (no need as pyright picks this up automatically)
+  "ANN102",  # missing-type-cls (no need as pyright picks this up automatically)
+  "DTZ",     # flake8-datetimez (makes timezone info compulsory)
+  "PGH003",  # blanket-type-ignore (would be good to add this back in)
+  "ANN002",  # missing-type-args
+  "ANN003",  # missing-type-kwargs
+  "PLR0913", # too-many-arguments
+  "G004",    # logging-f-string
+  "FIX",     # flake8-fixme
+  "INP001",  # implicit-namespace-package (seems to fail when running through pants but not directly with ruff)
+  "FA",      # flake8-future-annotations
+  "ISC001",  # single-line-implicit-string-concatenation
 ]
 
 # Allow unused variables when underscore-prefixed.
@@ -64,7 +59,9 @@ known-first-party = ["secret_santa_pp", "tests"]
 split-on-trailing-comma = false
 
 [tool.ruff.lint.per-file-ignores]
-"src/python/platform_cli/cli.py" = ["UP007"]
+"secret_santa_pp/cli.py" = ["UP007"]
+"**/test_*.py" = ["ANN201", "S101"]
+"tests/helper/config.py" = ["S101"]
 
 [tool.ruff.format]
 quote-style = "double"

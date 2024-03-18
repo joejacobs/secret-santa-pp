@@ -29,7 +29,6 @@ def generate_solution(
     ] = False,
 ) -> None:
     """Generate a new secret santa solution."""
-
     console.log(f"Loading config file: {config_file_path}")
     with config_file_path.open() as fp:
         config = Config.model_validate_json(fp.read())
@@ -56,13 +55,15 @@ def generate_solution(
 
 @app.command()
 def display_solution(
-    config_file_path: Path = typer.Argument(help="Path to the config file."),
-    solution_key: str = typer.Argument(
-        help="The key under which the solution is stored in the config file."
-    ),
+    config_file_path: Annotated[Path, typer.Argument(help="Path to the config file.")],
+    solution_key: Annotated[
+        str,
+        typer.Argument(
+            help="The key under which the solution is stored in the config file."
+        ),
+    ],
 ) -> None:
     """Visualise an existing santa solution."""
-
     console.log(f"Loading config file: {config_file_path}")
     with config_file_path.open() as fp:
         config = Config.model_validate_json(fp.read())
