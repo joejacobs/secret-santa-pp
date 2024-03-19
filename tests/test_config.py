@@ -136,15 +136,15 @@ class RelationshipParams:
     ],
 )
 def test_constraint_meet_criterion(
-    params: RelationshipParams,
+    relationship_params: RelationshipParams,
     comparator: ComparatorType,
     expected_result: bool,
 ):
     person1 = MockPerson(
-        name="person-1", relationships=params.relationships1
+        name="person-1", relationships=relationship_params.relationships1
     ).get_model()
     person2 = MockPerson(
-        name="person-2", relationships=params.relationships2
+        name="person-2", relationships=relationship_params.relationships2
     ).get_model()
 
     constraint = MockConstraint(
