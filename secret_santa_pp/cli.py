@@ -47,7 +47,7 @@ def generate_solution(
         )
         if confirmation is True:
             console.log(f"Updating config with solution (key: {solution_key})")
-            config.update_with_graph(solution.graph, solution_key)
+            config.update_from_graph(solution.graph, solution_key)
 
             with config_file_path.open(mode="w+") as fp:
                 fp.write(config.model_dump_json(indent=2))

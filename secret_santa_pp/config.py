@@ -57,7 +57,7 @@ class Config(BaseModel):
     people: list[Person]
     constraints: list[Constraint]
 
-    def update_with_graph(self, graph: DiGraph, key: str) -> None:
+    def update_from_graph(self, graph: DiGraph, key: str) -> None:
         for person in self.people:
             if person.name in graph.nodes:
                 person.relationships[key] = list(graph[person.name])

@@ -6,6 +6,8 @@ lint: ruff-check pyright
 
 lint-fix: ruff-fix
 
+lint-test: lint test
+
 pyright:
 	poetry run pyright
 

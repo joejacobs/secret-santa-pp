@@ -154,7 +154,7 @@ def test_constraint_meet_criterion(
     assert constraint.meet_criterion(person1, person2) == expected_result
 
 
-def test_config_update_with_graph():
+def test_config_update_from_graph():
     config = MockConfig(
         people=[
             MockPerson(name=str(i), relationships={"key": ["99"]}) for i in range(10)
@@ -171,7 +171,7 @@ def test_config_update_with_graph():
         for dst in dst_list:
             graph.add_edge(src, dst)
 
-    config.update_with_graph(graph, "new-key")
+    config.update_from_graph(graph, "new-key")
 
     for person in config.people:
         if (dst_list := src_dst_list_map.get(person.name)) is None:
