@@ -8,6 +8,7 @@ license = "AGPL-3.0-or-later"
 
 [tool.poetry.dependencies]
 matplotlib = "*"
+matplotlib-stubs = "*"
 networkx = "*"
 pydantic = { version = "*", extras = ["email"] }
 python = "^3.12"
