@@ -63,9 +63,9 @@ class Config(BaseModel):
                 person.relationships[key] = list(graph[person.name])
 
     def load_graph(self, key: str) -> "DiGraph[str]":
-        graph: DiGraph[str] = DiGraph()
-        for person in self.people:
-            for recipient in person.relationships.get(key, []):
-                graph.add_edge(person.name, recipient)
-
-        return graph
+        edges = [
+            (person.name, recipient)
+            for person in self.people
+            for recipient in person.relationships.get(key, [])
+        ]
+        return DiGraph(edges)

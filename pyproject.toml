@@ -14,6 +14,7 @@ python = "^3.12"
 rich = "*"
 scipy = "*"
 typer = "*"
+types-networkx = "*"
 
 [tool.poetry.group.test.dependencies]
 pyright = "*"

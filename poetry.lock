@@ -1029,6 +1029,20 @@ doc = ["cairosvg (>=2.5.2,<3.0.0)", "mdx-include (>=1.4.1,<2.0.0)", "mkdocs (>=1
 test = ["black (>=22.3.0,<23.0.0)", "coverage (>=6.2,<7.0)", "isort (>=5.0.6,<6.0.0)", "mypy (==0.971)", "pytest (>=4.4.0,<8.0.0)", "pytest-cov (>=2.10.0,<5.0.0)", "pytest-sugar (>=0.9.4,<0.10.0)", "pytest-xdist (>=1.32.0,<4.0.0)", "rich (>=10.11.0,<14.0.0)", "shellingham (>=1.3.0,<2.0.0)"]
 
 [[package]]
+name = "types-networkx"
+version = "3.2.1.20240313"
+description = "Typing stubs for networkx"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "types-networkx-3.2.1.20240313.tar.gz", hash = "sha256:0bae31578a62ca73a8fe6fee43b4e4d851dfe9cc71747adb4c23ebac8be6ec59"},
+    {file = "types_networkx-3.2.1.20240313-py3-none-any.whl", hash = "sha256:e35dd4adee8f8cfb923ce344c8db98f461e00c077850e8939ac6418d612eafda"},
+]
+
+[package.dependencies]
+numpy = "*"
+
+[[package]]
 name = "typing-extensions"
 version = "4.10.0"
 description = "Backported and Experimental Type Hints for Python 3.8+"
@@ -1042,4 +1056,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "05e93fa2b7bca3187af35d5643cc1aca105ec75960c4e0cd175a12e28e67a794"
+content-hash = "e1e73be09cd58ada8be0d9347d445808cd1baca1b8becb824d690b5d1ea62ad9"
