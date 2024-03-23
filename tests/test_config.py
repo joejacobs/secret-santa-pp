@@ -169,7 +169,7 @@ def test_config_update_from_graph():
     graph: DiGraph[str] = DiGraph()
     for src, dst_list in src_dst_list_map.items():
         for dst in dst_list:
-            graph.add_edge(src, dst)
+            graph.add_edge(src, dst)  # pyright: ignore [reportUnknownMemberType]
 
     config.update_from_graph(graph, "new-key")
 

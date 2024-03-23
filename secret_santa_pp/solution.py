@@ -3,7 +3,13 @@ from itertools import pairwise
 from typing import Any, cast
 
 from matplotlib import pyplot as plt
-from networkx import DiGraph, approximation, draw, draw_networkx_labels, shell_layout
+from networkx import (
+    DiGraph,
+    approximation,
+    draw,  # pyright: ignore [reportUnknownVariableType]
+    draw_networkx_labels,  # pyright: ignore [reportUnknownVariableType]
+    shell_layout,  # pyright: ignore [reportUnknownVariableType]
+)
 from pydantic import BaseModel, ConfigDict
 
 from secret_santa_pp.config import Config, Person
@@ -52,10 +58,14 @@ class Solution(BaseModel):
                 person2 = self.config.people[j]
 
                 if (weight := self._get_edge_weight(person1, person2)) is not None:
-                    self.graph.add_edge(person1.name, person2.name, weight=weight)
+                    self.graph.add_edge(  # pyright: ignore [reportUnknownMemberType]
+                        person1.name, person2.name, weight=weight
+                    )
 
                 if (weight := self._get_edge_weight(person2, person1)) is not None:
-                    self.graph.add_edge(person2.name, person1.name, weight=weight)
+                    self.graph.add_edge(  # pyright: ignore [reportUnknownMemberType]
+                        person2.name, person1.name, weight=weight
+                    )
 
     def _get_edge_weight(self, src_person: Person, dst_person: Person) -> int | None:
         weight = 1
@@ -87,7 +97,9 @@ class Solution(BaseModel):
             )
 
             for src, dst in pairwise(tsp_path):
-                final_graph.add_edge(src, dst, weight=self.graph[src][dst]["weight"])
+                final_graph.add_edge(  # pyright: ignore [reportUnknownMemberType]
+                    src, dst, weight=self.graph[src][dst]["weight"]
+                )
                 init_graph.remove_edge(src, dst)
 
         self._verify_solution(final_graph)
@@ -106,4 +118,4 @@ class Solution(BaseModel):
         pos: Any = shell_layout(self.graph)
         draw(self.graph, pos, node_size=1000, font_size=16)
         draw_networkx_labels(self.graph, pos)
-        plt.show()
+        plt.show()  # pyright: ignore [reportUnknownMemberType]
