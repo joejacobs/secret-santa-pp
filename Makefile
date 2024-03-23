@@ -18,4 +18,4 @@ ruff-fix:
 	poetry run ruff check --fix
 
 test:
-	poetry run pytest --cov=secret_santa_pp
+	poetry run pytest

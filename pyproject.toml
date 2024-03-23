@@ -33,6 +33,10 @@ ignore = [
   "secret_santa_pp/secretsantapp.py",
 ]
 
+[tool.pytest.ini_options]
+addopts = "--cov=secret_santa_pp"
+testpaths = ["tests"]
+
 [tool.ruff]
 exclude = [".coverage", ".git", ".pytest_cache", ".ruff_cache"]
 line-length = 88
