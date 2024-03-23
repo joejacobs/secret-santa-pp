@@ -10,8 +10,11 @@ from secret_santa_pp.config import Config, Person
 
 
 def tsp_solver(graph: DiGraph[str], weight: str) -> list[str]:
-    return approximation.simulated_annealing_tsp(
-        graph, "greedy", weight=weight, max_iterations=100, N_inner=1000
+    return cast(
+        list[str],
+        approximation.simulated_annealing_tsp(
+            graph, "greedy", weight=weight, max_iterations=100, N_inner=1000
+        ),
     )
 
 
