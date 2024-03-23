@@ -11,8 +11,11 @@ jobs:
       - python/install-packages:
           pkg-manager: poetry
       - run:
+          name: Run linter
+          command: make lint
+      - run:
           name: Run tests
-          command: poetry run pytest
+          command: make test
 workflows:
   build_and_test:
     jobs:
