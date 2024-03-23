@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Literal
 
 from networkx import DiGraph
@@ -57,15 +59,16 @@ class Config(BaseModel):
     people: list[Person]
     constraints: list[Constraint]
 
-    def update_from_graph(self, graph: "DiGraph[str]", key: str) -> None:
+    def update_from_graph(self, graph: DiGraph[str], key: str) -> None:
         for person in self.people:
             if person.name in graph.nodes:
                 person.relationships[key] = list(graph[person.name])
 
-    def load_graph(self, key: str) -> "DiGraph[str]":
-        edges = [
-            (person.name, recipient)
-            for person in self.people
-            for recipient in person.relationships.get(key, [])
-        ]
-        return DiGraph(edges)
+    def load_graph(self, key: str) -> DiGraph[str]:
+        return DiGraph(
+            [
+                (person.name, recipient)
+                for person in self.people
+                for recipient in person.relationships.get(key, [])
+            ]
+        )
