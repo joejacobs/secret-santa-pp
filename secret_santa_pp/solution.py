@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 from copy import deepcopy
 from itertools import pairwise
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from matplotlib import pyplot as plt
 from networkx import (
@@ -12,7 +14,8 @@ from networkx import (
 )
 from pydantic import BaseModel, ConfigDict
 
-from secret_santa_pp.config import Config, Person
+if TYPE_CHECKING:
+    from secret_santa_pp.config import Config, Person
 
 
 def tsp_solver(graph: DiGraph[str], weight: str) -> list[str]:
@@ -29,17 +32,17 @@ class Solution(BaseModel):
 
     config: Config
     n_recipients: int
-    graph: DiGraph[str] = DiGraph()
+    graph: DiGraph[str]
 
     @classmethod
-    def generate(cls, config: Config, n_recipients: int) -> "Solution":
-        solution = cls(config=config, n_recipients=n_recipients)
+    def generate(cls, config: Config, n_recipients: int) -> Solution:
+        solution = cls(graph=DiGraph(), config=config, n_recipients=n_recipients)
         solution.init_graph()
         solution.generate_solution()
         return solution
 
     @classmethod
-    def load(cls, config: Config, solution_key: str) -> "Solution":
+    def load(cls, config: Config, solution_key: str) -> Solution:
         graph = config.load_graph(solution_key)
         if len(graph.edges) == 0:
             msg = f"Solution key not found: {solution_key}."
