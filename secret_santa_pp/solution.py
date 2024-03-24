@@ -110,8 +110,8 @@ class Solution(BaseModel):
     def _verify_solution(self, graph: DiGraph[str]) -> None:
         for node in graph.nodes:
             if (
-                len(graph.in_degree(node)) != self.n_recipients
-                or len(graph.out_degree(node)) != self.n_recipients
+                cast(int, graph.in_degree(node)) != self.n_recipients
+                or cast(int, graph.out_degree(node)) != self.n_recipients
             ):
                 msg = f"Invalid solution: {graph.edges}"
                 raise RuntimeError(msg)
