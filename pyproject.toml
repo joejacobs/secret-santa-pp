@@ -35,7 +35,7 @@ ignore = [
 ]
 
 [tool.pytest.ini_options]
-addopts = "--cov=secret_santa_pp --cov-report=term --cov-report=html --cov-report=xml"
+addopts = "--cov=secret_santa_pp --cov-report=term --cov-report=html --cov-report=json"
 testpaths = ["tests"]
 
 [tool.ruff]
