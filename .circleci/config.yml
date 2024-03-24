@@ -18,10 +18,11 @@ jobs:
           name: Run tests
           command: make test
       - run:
-          name: Activate poetry shell
-          command: poetry shell
-      - codecov/upload:
-          file: coverage.json
+          name: Install codecov
+          command: poetry install codecov-cli
+      - run:
+          name: Upload to codecov
+          command: poetry run codecovcli upload-process
       - store_artifacts:
           path: htmlcov
 workflows:
