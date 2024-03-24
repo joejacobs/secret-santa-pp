@@ -25,4 +25,4 @@ workflows:
       - test:
           post-steps:
             - codecov/upload
-                file: .coverage
+                file: ".coverage"
