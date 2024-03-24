@@ -61,6 +61,8 @@ ignore = [
   "FIX",     # flake8-fixme
   "FA",      # flake8-future-annotations
   "ISC001",  # single-line-implicit-string-concatenation
+  "TCH001",  # typing-only-first-party-import
+  "TCH003",  # typing-only-standard-library-import
 ]
 
 # Allow unused variables when underscore-prefixed.

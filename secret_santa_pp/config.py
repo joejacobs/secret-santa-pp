@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from typing import Literal
 
-from networkx import DiGraph
 from pydantic import BaseModel, EmailStr
+
+from secret_santa_pp.stubs import DiGraph
 
 type ComparatorType = Literal[
     "one-way contains", "two-way contains", "either contains", "equality"
@@ -15,6 +16,25 @@ class Person(BaseModel):
     name: str
     email: EmailStr
     relationships: dict[str, list[str]] = {}
+
+
+class Config(BaseModel):
+    people: list[Person]
+    constraints: list[Constraint]
+
+    def update_from_graph(self, graph: DiGraph[str], key: str) -> None:
+        for person in self.people:
+            if person.name in graph.nodes:
+                person.relationships[key] = list(graph[person.name])
+
+    def load_graph(self, key: str) -> DiGraph[str]:
+        return DiGraph(
+            [
+                (person.name, recipient)
+                for person in self.people
+                for recipient in person.relationships.get(key, [])
+            ]
+        )
 
 
 class Constraint(BaseModel):
@@ -53,22 +73,3 @@ class Constraint(BaseModel):
             meet_criterion &= opposite_contains
 
         return meet_criterion
-
-
-class Config(BaseModel):
-    people: list[Person]
-    constraints: list[Constraint]
-
-    def update_from_graph(self, graph: DiGraph[str], key: str) -> None:
-        for person in self.people:
-            if person.name in graph.nodes:
-                person.relationships[key] = list(graph[person.name])
-
-    def load_graph(self, key: str) -> DiGraph[str]:
-        return DiGraph(
-            [
-                (person.name, recipient)
-                for person in self.people
-                for recipient in person.relationships.get(key, [])
-            ]
-        )

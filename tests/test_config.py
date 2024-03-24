@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
-from networkx import DiGraph
 import pytest
 
 from secret_santa_pp.config import ComparatorType
+from secret_santa_pp.stubs import DiGraph
 
 from tests.helper.config import MockConfig, MockConstraint, MockPerson
 

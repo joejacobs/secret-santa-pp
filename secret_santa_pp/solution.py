@@ -2,11 +2,10 @@ from __future__ import annotations
 
 from copy import deepcopy
 from itertools import pairwise
-from typing import TYPE_CHECKING, Any, cast
+from typing import Any, cast
 
 from matplotlib import pyplot as plt
 from networkx import (
-    DiGraph,
     approximation,
     draw,  # pyright: ignore [reportUnknownVariableType]
     draw_networkx_labels,  # pyright: ignore [reportUnknownVariableType]
@@ -14,8 +13,8 @@ from networkx import (
 )
 from pydantic import BaseModel, ConfigDict
 
-if TYPE_CHECKING:
-    from secret_santa_pp.config import Config, Person
+from secret_santa_pp.config import Config, Person
+from secret_santa_pp.stubs import DiGraph
 
 
 def tsp_solver(graph: DiGraph[str], weight: str) -> list[str]:
