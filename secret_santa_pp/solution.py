@@ -14,7 +14,7 @@ from networkx import (
 from pydantic import BaseModel, ConfigDict
 
 from secret_santa_pp.config import Config, Person
-from secret_santa_pp.stubs import DiGraph
+from secret_santa_pp.wrapper import DiGraph
 
 
 def tsp_solver(graph: DiGraph[str], weight: str) -> list[str]:

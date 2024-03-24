@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import BaseModel, EmailStr
 
-from secret_santa_pp.stubs import DiGraph
+from secret_santa_pp.wrapper import DiGraph
 
 type ComparatorType = Literal[
     "one-way contains", "two-way contains", "either contains", "equality"
