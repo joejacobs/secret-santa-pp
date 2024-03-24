@@ -19,7 +19,7 @@ jobs:
           command: make test
       - run:
           name: Install codecov
-          command: poetry install codecov-cli
+          command: poetry run pip install codecov-cli
       - run:
           name: Upload to codecov
           command: poetry run codecovcli upload-process
