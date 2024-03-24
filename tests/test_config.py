@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import pytest
 
 from secret_santa_pp.config import ComparatorType
-from secret_santa_pp.stubs import DiGraph
+from secret_santa_pp.wrapper import DiGraph
 
 from tests.helper.config import MockConfig, MockConstraint, MockPerson
 
