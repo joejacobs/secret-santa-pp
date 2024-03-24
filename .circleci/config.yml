@@ -24,4 +24,5 @@ workflows:
     jobs:
       - test:
           post-steps:
-            - codecov/upload
+            - codecov/upload:
+                file: htmlcov
