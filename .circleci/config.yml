@@ -17,10 +17,9 @@ jobs:
       - run:
           name: Run tests
           command: make test
-      - run:
-          name: Upload test coverage to codecov
-          command: codecov/upload
 workflows:
   build_and_test:
     jobs:
-      - test
+      - test:
+          post-steps:
+            - codecov/upload
