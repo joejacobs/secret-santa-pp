@@ -17,6 +17,9 @@ jobs:
       - run:
           name: Run tests
           command: make test
+      - run:
+          name: Activate poetry shell
+          command: poetry shell
       - codecov/upload:
           file: coverage.json
       - store_artifacts:
