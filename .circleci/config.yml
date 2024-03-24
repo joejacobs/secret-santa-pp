@@ -19,7 +19,6 @@ jobs:
           command: make test
       - codecov/upload:
           file: .coverage
-          conf: codecov.yml
       - store_artifacts:
           path: htmlcov
 workflows:
