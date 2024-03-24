@@ -18,6 +18,7 @@ jobs:
           name: Run tests
           command: make test
       - codecov/upload
+          file: coverage.xml
       - store_artifacts:
           path: htmlcov
 workflows:
