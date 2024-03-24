@@ -24,4 +24,6 @@ workflows:
     jobs:
       - test:
           post-steps:
+            - run:
+                command: ls -la
             - codecov/upload
