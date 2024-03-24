@@ -18,6 +18,7 @@ typer = "*"
 types-networkx = "*"
 
 [tool.poetry.group.test.dependencies]
+coverage = "*"
 pyright = "*"
 pytest = "*"
 pytest-cov = "*"
