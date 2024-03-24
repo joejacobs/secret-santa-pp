@@ -82,22 +82,22 @@
   ],
   "constraints": [
     {
-      "relationship": "parent",
+      "relationship_key": "parent",
       "comparator": "either contains",
       "limit": "exclude"
     },
     {
-      "relationship": "partner",
+      "relationship_key": "partner",
       "comparator": "two-way contains",
       "limit": "exclude"
     },
     {
-      "relationship": "parent",
+      "relationship_key": "parent",
       "comparator": "equality",
       "limit": "low-probability"
     },
     {
-      "relationship": "godparent",
+      "relationship_key": "godparent",
       "comparator": "either contains",
       "limit": "medium-probability"
     }
