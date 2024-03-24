@@ -18,12 +18,11 @@ jobs:
           name: Run tests
           command: make test
       - store_artifacts:
-          path: .coverage
+          path: htmlcov
 workflows:
   build_and_test:
     jobs:
       - test:
           post-steps:
-            - run:
-                command: ls -la
             - codecov/upload
+                file: .coverage
