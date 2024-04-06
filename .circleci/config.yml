@@ -18,7 +18,7 @@ jobs:
           name: Run tests
           command: make test
       - codecov/upload:
-        cli_args: '-v -r joejacobs/secret-santa-pp'
+        cli_args: '-v -r joejacobs/secret-santa-pp --git-service github'
       - store_artifacts:
           path: htmlcov
 workflows:
