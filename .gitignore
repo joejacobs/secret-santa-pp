@@ -6,5 +6,8 @@
 [._]sw[a-p]
 
 # Python
-__pycache__
 *.pyc
+__pycache__
+.coverage
+coverage.json
+htmlcov
