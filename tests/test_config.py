@@ -157,7 +157,8 @@ def test_constraint_meet_criterion(
 def test_config_update_from_graph():
     config = MockConfig(
         people=[
-            MockPerson(name=str(i), relationships={"key": ["99"]}) for i in range(10)
+            MockPerson(name=str(i), relationships={"ignore-key": ["99"]})
+            for i in range(10)
         ]
     ).get_model()
 
@@ -171,13 +172,13 @@ def test_config_update_from_graph():
         for dst in dst_list:
             graph.add_edge(src, dst)  # pyright: ignore [reportUnknownMemberType]
 
-    config.update_from_graph(graph, "new-key")
+    config.update_from_graph(graph, "graph-key")
 
     for person in config.people:
         if (dst_list := src_dst_list_map.get(person.name)) is None:
-            assert "new-key" not in person.relationships
+            assert "graph-key" not in person.relationships
         else:
-            assert person.relationships["new-key"] == dst_list
+            assert person.relationships["graph-key"] == dst_list
 
 
 def test_config_load_graph():
@@ -192,7 +193,7 @@ def test_config_load_graph():
                 MockPerson(
                     name=str(i),
                     relationships={
-                        "key": ["99"],
+                        "ignore-key": ["99"],
                         "graph-key": src_dst_list_map.get(str(i), []),
                     },
                 )
