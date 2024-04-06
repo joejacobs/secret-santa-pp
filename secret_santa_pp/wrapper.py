@@ -5,8 +5,8 @@ from networkx import DiGraph as nxDiGraph
 T = TypeVar("T")
 
 
-# networkx graphs are not properly typed. This is a workaround so that the
-# linter works as expected.
+# networkx is not properly typed. This is a workaround so that the linter works
+# as expected.
 if TYPE_CHECKING:
 
     class _DiGraph(nxDiGraph[T]):  # pragma: no cover
