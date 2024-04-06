@@ -28,7 +28,7 @@ jobs:
       run: make test
     - name: Code Coverage Report
       uses: irongut/CodeCoverageSummary@v1.3.0
-      if: matix.os == 'ubuntu-latest'
+      if: matrix.os == 'ubuntu-latest'
       with:
         filename: coverage.xml
         badge: true
