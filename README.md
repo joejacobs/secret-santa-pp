@@ -1,8 +1,6 @@
 SecretSanta++
 =============
 
-[![CircleCI](https://dl.circleci.com/status-badge/img/circleci/F1z1gVPVCyQLCPLPNjvhuQ/M3AU16PzS7YpvmLMCyaiwQ/tree/main.svg?style=shield&circle-token=CCIPRJ_5RmyXN9shp68JruhDiSAMz_9a1bfa7ce98826dfe88fba061ee5caa1d8715da0)](https://dl.circleci.com/status-badge/redirect/circleci/F1z1gVPVCyQLCPLPNjvhuQ/M3AU16PzS7YpvmLMCyaiwQ/tree/main)
-
 Secret Santa but with the ability to specify different constraints to avoid
 certain matches, e.g. to avoid people getting the same names two years in a row
 or to prevent couples from getting each other's names.
