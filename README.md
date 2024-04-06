@@ -1,6 +1,9 @@
 SecretSanta++
 =============
 
+![ci status](https://github.com/joejacobs/secret-santa-pp/actions/workflows/ci.yml/badge.svg)
+[![codecov](https://codecov.io/gh/joejacobs/secret-santa-pp/graph/badge.svg?token=L08QTA1DSd)](https://codecov.io/gh/joejacobs/secret-santa-pp)
+
 Secret Santa but with the ability to specify different constraints to avoid
 certain matches, e.g. to avoid people getting the same names two years in a row
 or to prevent couples from getting each other's names.
