@@ -20,7 +20,6 @@ jobs:
       - run:
           command: echo $CODECOV_TOKEN
       - codecov/upload
-          token: $CODECOV_TOKEN
       - store_artifacts:
           path: htmlcov
 workflows:
