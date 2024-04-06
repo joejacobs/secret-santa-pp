@@ -18,6 +18,7 @@ jobs:
           name: Run tests
           command: make test
       - codecov/upload
+          token: CODECOV_TOKEN
       - store_artifacts:
           path: htmlcov
 workflows:
