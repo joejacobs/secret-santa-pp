@@ -1,5 +1,5 @@
 clean:
-	rm -rf .ruff_cache .pytest_cache
+	rm -rf .coverage .pytest_cache .ruff_cache coverage.xml htmlcov
 
 format:
 	poetry run ruff check --select I --fix
