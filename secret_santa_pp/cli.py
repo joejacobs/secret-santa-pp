@@ -18,7 +18,12 @@ def generate_solution(
     config_file_path: Annotated[Path, typer.Argument(help="Path to the config file.")],
     participants_file_path: Annotated[
         Optional[Path],
-        typer.Argument(help="Path to the file containing a list of participants."),
+        typer.Argument(
+            help=(
+                "Path to the file containing a list of participants. If unspecified, we"
+                " assume all people in the config file are participants."
+            )
+        ),
     ] = None,
     n_recipients: Annotated[int, typer.Option(help="Number of recipients.")] = 1,
     solution_key: Annotated[
