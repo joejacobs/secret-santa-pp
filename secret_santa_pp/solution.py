@@ -30,14 +30,15 @@ class Solution(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     config: Config
-    n_recipients: int
     graph: DiGraph[str]
 
     @classmethod
-    def generate(cls, config: Config, n_recipients: int) -> Solution:
-        solution = cls(graph=DiGraph(), config=config, n_recipients=n_recipients)
-        solution.init_graph()
-        solution.generate_solution()
+    def generate(
+        cls, config: Config, participants: list[str] | None, n_recipients: int
+    ) -> Solution:
+        solution = cls(graph=DiGraph(), config=config)
+        solution.init_graph(participants)
+        solution.generate_solution(n_recipients)
         return solution
 
     @classmethod
@@ -47,17 +48,20 @@ class Solution(BaseModel):
             msg = f"Solution key not found: {solution_key}."
             raise LookupError(msg)
 
-        return cls(
-            graph=graph, config=config, n_recipients=len(graph[next(iter(graph.nodes))])
-        )
+        return cls(graph=graph, config=config)
 
-    def init_graph(self) -> None:
-        n_people = len(self.config.people)
+    def init_graph(self, participants: list[str] | None) -> None:
+        people = [
+            person
+            for person in self.config.people
+            if participants is None or person.name in participants
+        ]
+        n_people = len(people)
         for i in range(n_people):
-            person1 = self.config.people[i]
+            person1 = people[i]
 
             for j in range(i + 1, n_people):
-                person2 = self.config.people[j]
+                person2 = people[j]
 
                 if (weight := self._get_edge_weight(person1, person2)) is not None:
                     self.graph.add_edge(  # pyright: ignore [reportUnknownMemberType]
@@ -87,10 +91,10 @@ class Solution(BaseModel):
 
         return weight
 
-    def generate_solution(self) -> None:
+    def generate_solution(self, n_recipients: int) -> None:
         final_graph: DiGraph[str] = DiGraph()
         init_graph = deepcopy(self.graph)
-        for _ in range(self.n_recipients):
+        for _ in range(n_recipients):
             tsp_path: list[str] = cast(
                 list[str],
                 approximation.traveling_salesman_problem(
@@ -104,14 +108,14 @@ class Solution(BaseModel):
                 )
                 init_graph.remove_edge(src, dst)
 
-        self._verify_solution(final_graph)
+        self._verify_solution(final_graph, n_recipients)
         self.graph = final_graph
 
-    def _verify_solution(self, graph: DiGraph[str]) -> None:
+    def _verify_solution(self, graph: DiGraph[str], n_recipients: int) -> None:
         for node in graph.nodes:
             if (
-                cast(int, graph.in_degree(node)) != self.n_recipients
-                or cast(int, graph.out_degree(node)) != self.n_recipients
+                cast(int, graph.in_degree(node)) != n_recipients
+                or cast(int, graph.out_degree(node)) != n_recipients
             ):
                 msg = f"Invalid solution: {graph.edges}"
                 raise RuntimeError(msg)

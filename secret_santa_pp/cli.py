@@ -16,6 +16,10 @@ console = Console()
 @app.command()
 def generate_solution(
     config_file_path: Annotated[Path, typer.Argument(help="Path to the config file.")],
+    participants_file_path: Annotated[
+        Optional[Path],
+        typer.Argument(help="Path to the file containing a list of participants."),
+    ] = None,
     n_recipients: Annotated[int, typer.Option(help="Number of recipients.")] = 1,
     solution_key: Annotated[
         Optional[str],
@@ -35,8 +39,16 @@ def generate_solution(
     with config_file_path.open() as fp:
         config = Config.model_validate_json(fp.read())
 
+    participants: list[str] | None = None
+    if participants_file_path is not None:
+        console.log(f"Load participants list: {participants_file_path}")
+        with participants_file_path.open() as fp:
+            participants = [name.strip() for name in fp.readlines()]
+
     console.log(f"Generating solution ({n_recipients} recipients)")
-    solution = Solution.generate(config=config, n_recipients=n_recipients)
+    solution = Solution.generate(
+        config=config, participants=participants, n_recipients=n_recipients
+    )
 
     if display is True:
         console.log("Displaying solution")
