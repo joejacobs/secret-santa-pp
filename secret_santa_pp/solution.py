@@ -108,16 +108,20 @@ class Solution(BaseModel):
                 )
                 init_graph.remove_edge(src, dst)
 
-        self._verify_solution(final_graph, n_recipients)
         self.graph = final_graph
+        self._verify_solution(n_recipients)
 
-    def _verify_solution(self, graph: DiGraph[str], n_recipients: int) -> None:
-        for node in graph.nodes:
+    def _verify_solution(self, n_recipients: int) -> None:
+        if len(self.graph.nodes) == 0:
+            msg = "Invalid solution: empty graph"
+            raise RuntimeError(msg)
+
+        for node in self.graph.nodes:
             if (
-                cast(int, graph.in_degree(node)) != n_recipients
-                or cast(int, graph.out_degree(node)) != n_recipients
+                cast(int, self.graph.in_degree(node)) != n_recipients
+                or cast(int, self.graph.out_degree(node)) != n_recipients
             ):
-                msg = f"Invalid solution: {graph.edges}"
+                msg = f"Invalid solution: {self.graph.edges}"
                 raise RuntimeError(msg)
 
     def display(self) -> None:
