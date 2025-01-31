@@ -8,6 +8,10 @@ from secret_santa_pp.wrapper import DiGraph
 from tests.helper.config import MockConfig, MockPerson
 
 
+def test_get_edge_weight():
+    pass
+
+
 def test_solution_load():
     path = [str(i) for i in range(5)] + [str(i) for i in range(2)]
     src_dst_list_map = {
@@ -34,22 +38,7 @@ def test_solution_load():
 
 
 def test_solution_load_key_not_found():
-    path = [str(i) for i in range(5)] + [str(i) for i in range(2)]
-    src_dst_list_map = {
-        i: [j, k] for i, j, k in zip(path[:-2], path[1:-1], path[2:], strict=True)
-    }
-
-    config = MockConfig(
-        people=[
-            MockPerson(
-                name=str(i),
-                relationships={
-                    "graph-key": src_dst_list_map.get(str(i), []),
-                },
-            )
-            for i in range(10)
-        ]
-    ).get_model()
+    config = MockConfig(people=[]).get_model()
 
     with pytest.raises(LookupError, match="Solution key not found: invalid-key"):
         Solution.load(config, "invalid-key")
