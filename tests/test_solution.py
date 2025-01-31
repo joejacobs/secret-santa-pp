@@ -2,9 +2,57 @@ import re
 
 import pytest
 
-from secret_santa_pp.config import Config
 from secret_santa_pp.solution import Solution
 from secret_santa_pp.wrapper import DiGraph
+
+from tests.helper.config import MockConfig, MockPerson
+
+
+def test_solution_load():
+    path = [str(i) for i in range(5)] + [str(i) for i in range(2)]
+    src_dst_list_map = {
+        i: [j, k] for i, j, k in zip(path[:-2], path[1:-1], path[2:], strict=True)
+    }
+
+    config = MockConfig(
+        people=[
+            MockPerson(
+                name=str(i),
+                relationships={
+                    "graph-key": src_dst_list_map.get(str(i), []),
+                },
+            )
+            for i in range(10)
+        ]
+    ).get_model()
+
+    solution = Solution.load(config, "graph-key")
+
+    assert len(solution.graph.nodes) == len(src_dst_list_map)
+    for node in solution.graph.nodes:
+        assert list(solution.graph[node]) == src_dst_list_map[node]
+
+
+def test_solution_load_key_not_found():
+    path = [str(i) for i in range(5)] + [str(i) for i in range(2)]
+    src_dst_list_map = {
+        i: [j, k] for i, j, k in zip(path[:-2], path[1:-1], path[2:], strict=True)
+    }
+
+    config = MockConfig(
+        people=[
+            MockPerson(
+                name=str(i),
+                relationships={
+                    "graph-key": src_dst_list_map.get(str(i), []),
+                },
+            )
+            for i in range(10)
+        ]
+    ).get_model()
+
+    with pytest.raises(LookupError, match="Solution key not found: invalid-key"):
+        Solution.load(config, "invalid-key")
 
 
 @pytest.mark.parametrize(
@@ -30,7 +78,7 @@ def test_solution_verify_solution(
     graph: DiGraph[str] = DiGraph()
     graph.add_edges_from(edges)  # pyright: ignore[reportUnknownMemberType]
 
-    solution = Solution(config=Config(people=[], constraints=[]), graph=graph)
+    solution = Solution(graph=graph)
 
     if expect_error is True:
         error_msg = f"Invalid solution: {edges}"
@@ -43,7 +91,7 @@ def test_solution_verify_solution(
 
 
 def test_solution_verify_solution_empty_graph_raises_error():
-    solution = Solution(config=Config(people=[], constraints=[]), graph=DiGraph())
+    solution = Solution(graph=DiGraph())
 
     with pytest.raises(RuntimeError, match="Invalid solution: empty graph"):
         solution._verify_solution(n_recipients=1)  # pyright: ignore[reportPrivateUsage]

@@ -18,6 +18,27 @@ from secret_santa_pp.config import Config, Person
 from secret_santa_pp.wrapper import DiGraph
 
 
+def get_edge_weight(
+    config: Config, src_person: Person, dst_person: Person
+) -> int | None:
+    weight = 1
+
+    if len(src_person.relationships) == 0:
+        return weight
+
+    for constraint in config.constraints:
+        if constraint.meet_criterion(src_person, dst_person):
+            if constraint.limit == "exclude":
+                return None
+
+            if constraint.limit == "low-probability":
+                weight += 4
+            elif constraint.limit == "medium-probability":
+                weight += 2
+
+    return weight
+
+
 def tsp_solver(graph: DiGraph[str], weight: str) -> list[str]:
     return cast(
         list[str],
@@ -30,15 +51,14 @@ def tsp_solver(graph: DiGraph[str], weight: str) -> list[str]:
 class Solution(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-    config: Config
     graph: DiGraph[str]
 
     @classmethod
     def generate(
         cls, config: Config, participants: list[str] | None, n_recipients: int
     ) -> Solution:
-        solution = cls(graph=DiGraph(), config=config)
-        solution.init_graph(participants)
+        solution = cls(graph=DiGraph())
+        solution.init_graph(config, participants)
         solution.generate_solution(n_recipients)
         return solution
 
@@ -49,12 +69,12 @@ class Solution(BaseModel):
             msg = f"Solution key not found: {solution_key}."
             raise LookupError(msg)
 
-        return cls(graph=graph, config=config)
+        return cls(graph=graph)
 
-    def init_graph(self, participants: list[str] | None) -> None:
+    def init_graph(self, config: Config, participants: list[str] | None) -> None:
         people = [
             person
-            for person in self.config.people
+            for person in config.people
             if participants is None or person.name in participants
         ]
         n_people = len(people)
@@ -64,33 +84,15 @@ class Solution(BaseModel):
             for j in range(i + 1, n_people):
                 person2 = people[j]
 
-                if (weight := self._get_edge_weight(person1, person2)) is not None:
+                if (weight := get_edge_weight(config, person1, person2)) is not None:
                     self.graph.add_edge(  # pyright: ignore [reportUnknownMemberType]
                         person1.name, person2.name, weight=weight
                     )
 
-                if (weight := self._get_edge_weight(person2, person1)) is not None:
+                if (weight := get_edge_weight(config, person2, person1)) is not None:
                     self.graph.add_edge(  # pyright: ignore [reportUnknownMemberType]
                         person2.name, person1.name, weight=weight
                     )
-
-    def _get_edge_weight(self, src_person: Person, dst_person: Person) -> int | None:
-        weight = 1
-
-        if len(src_person.relationships) == 0:
-            return weight
-
-        for constraint in self.config.constraints:
-            if constraint.meet_criterion(src_person, dst_person):
-                if constraint.limit == "exclude":
-                    return None
-
-                if constraint.limit == "low-probability":
-                    weight += 4
-                elif constraint.limit == "medium-probability":
-                    weight += 2
-
-        return weight
 
     def generate_solution(self, n_recipients: int) -> None:
         final_graph: DiGraph[str] = DiGraph()
