@@ -20,16 +20,8 @@ from secret_santa_pp.wrapper import DiGraph
             3,
             True,
         ),
-        (
-            [("a", "b"), ("a", "c"), ("b", "a"), ("b", "c"), ("c", "a")],
-            2,
-            True,
-        ),
-        (
-            [("a", "b"), ("a", "c"), ("b", "c")],
-            3,
-            True,
-        ),
+        ([("a", "b"), ("a", "c"), ("b", "a"), ("b", "c"), ("c", "a")], 2, True),
+        ([("a", "b"), ("a", "c"), ("b", "c")], 3, True),
     ],
 )
 def test_solution_verify_solution(
@@ -51,10 +43,7 @@ def test_solution_verify_solution(
 
 
 def test_solution_verify_solution_empty_graph_raises_error():
-    solution = Solution(
-        config=Config(people=[], constraints=[]),
-        graph=DiGraph(),
-    )
+    solution = Solution(config=Config(people=[], constraints=[]), graph=DiGraph())
 
     with pytest.raises(RuntimeError, match="Invalid solution: empty graph"):
         solution._verify_solution(n_recipients=1)  # pyright: ignore[reportPrivateUsage]

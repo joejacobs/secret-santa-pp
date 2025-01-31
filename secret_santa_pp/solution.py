@@ -12,6 +12,7 @@ from networkx import (
     shell_layout,  # pyright: ignore [reportUnknownVariableType]
 )
 from pydantic import BaseModel, ConfigDict
+from rich.console import Console
 
 from secret_santa_pp.config import Config, Person
 from secret_santa_pp.wrapper import DiGraph
@@ -124,8 +125,14 @@ class Solution(BaseModel):
                 msg = f"Invalid solution: {self.graph.edges}"
                 raise RuntimeError(msg)
 
-    def display(self) -> None:
+    def visualise(self) -> None:
         pos: Any = shell_layout(self.graph)
         draw(self.graph, pos, node_size=1000, font_size=16)
         draw_networkx_labels(self.graph, pos)
         plt.show()  # pyright: ignore [reportUnknownMemberType]
+
+    def print(self) -> None:
+        console = Console()
+        for s in self.graph:
+            edges = list(self.graph[s])
+            console.print(f"{s}: {", ".join(edges)}")
