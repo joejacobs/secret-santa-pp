@@ -35,8 +35,11 @@ def generate_solution(
             )
         ),
     ] = None,
-    display: Annotated[
+    display_graph: Annotated[
         bool, typer.Option(help="Plot and display the solution.")
+    ] = False,
+    print_console: Annotated[
+        bool, typer.Option(help="Print the solution to the console")
     ] = False,
 ) -> None:
     """Generate a new secret santa solution."""
@@ -55,9 +58,13 @@ def generate_solution(
         config=config, participants=participants, n_recipients=n_recipients
     )
 
-    if display is True:
-        console.log("Displaying solution")
-        solution.display()
+    if display_graph is True:
+        console.log("Visualising solution graph")
+        solution.visualise()
+
+    if print_console is True:
+        console.log("Printing solution to console")
+        solution.print()
 
     if solution_key is not None:
         confirmation = typer.confirm(
@@ -73,7 +80,7 @@ def generate_solution(
 
 
 @app.command()
-def display_solution(
+def display_solution_graph(
     config_file_path: Annotated[Path, typer.Argument(help="Path to the config file.")],
     solution_key: Annotated[
         str,
@@ -82,7 +89,7 @@ def display_solution(
         ),
     ],
 ) -> None:
-    """Visualise an existing santa solution."""
+    """Visualise an existing santa solution graph."""
     console.log(f"Loading config file: {config_file_path}")
     with config_file_path.open() as fp:
         config = Config.model_validate_json(fp.read())
@@ -91,7 +98,29 @@ def display_solution(
     solution = Solution.load(config=config, solution_key=solution_key)
 
     console.log("Displaying solution")
-    solution.display()
+    solution.visualise()
+
+
+@app.command()
+def display_solution_console(
+    config_file_path: Annotated[Path, typer.Argument(help="Path to the config file.")],
+    solution_key: Annotated[
+        str,
+        typer.Argument(
+            help="The key under which the solution is stored in the config file."
+        ),
+    ],
+) -> None:
+    """Visualise an existing santa solution in the console."""
+    console.log(f"Loading config file: {config_file_path}")
+    with config_file_path.open() as fp:
+        config = Config.model_validate_json(fp.read())
+
+    console.log(f"Loading solution (key: {solution_key})")
+    solution = Solution.load(config=config, solution_key=solution_key)
+
+    console.log("Displaying solution")
+    solution.print()
 
 
 if __name__ == "__main__":
