@@ -14,19 +14,19 @@ from networkx import (
 from pydantic import BaseModel, ConfigDict
 from rich.console import Console
 
-from secret_santa_pp.config import Config, Person
+from secret_santa_pp.config import Config, Constraint, Person
 from secret_santa_pp.wrapper import DiGraph
 
 
 def get_edge_weight(
-    config: Config, src_person: Person, dst_person: Person
+    constraints: list[Constraint], src_person: Person, dst_person: Person
 ) -> int | None:
     weight = 1
 
     if len(src_person.relationships) == 0:
         return weight
 
-    for constraint in config.constraints:
+    for constraint in constraints:
         if constraint.meet_criterion(src_person, dst_person):
             if constraint.limit == "exclude":
                 return None
@@ -84,12 +84,16 @@ class Solution(BaseModel):
             for j in range(i + 1, n_people):
                 person2 = people[j]
 
-                if (weight := get_edge_weight(config, person1, person2)) is not None:
+                if (
+                    weight := get_edge_weight(config.constraints, person1, person2)
+                ) is not None:
                     self.graph.add_edge(  # pyright: ignore [reportUnknownMemberType]
                         person1.name, person2.name, weight=weight
                     )
 
-                if (weight := get_edge_weight(config, person2, person1)) is not None:
+                if (
+                    weight := get_edge_weight(config.constraints, person2, person1)
+                ) is not None:
                     self.graph.add_edge(  # pyright: ignore [reportUnknownMemberType]
                         person2.name, person1.name, weight=weight
                     )

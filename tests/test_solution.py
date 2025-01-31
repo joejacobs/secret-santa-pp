@@ -2,14 +2,72 @@ import re
 
 import pytest
 
-from secret_santa_pp.solution import Solution
+from secret_santa_pp.config import ComparatorType, LimitType
+from secret_santa_pp.solution import Solution, get_edge_weight
 from secret_santa_pp.wrapper import DiGraph
 
-from tests.helper.config import MockConfig, MockPerson
+from tests.helper.config import MockConfig, MockConstraint, MockPerson
 
 
-def test_get_edge_weight():
-    pass
+@pytest.mark.parametrize(
+    (
+        "src_relationships",
+        "constraint_params",
+        "expected_weight",
+    ),
+    [
+        ({}, [], 1),
+        ({"key": ["b"]}, [("key", "one-way contains", "exclude")], None),
+        ({"key": ["b"]}, [("key", "one-way contains", "low-probability")], 5),
+        ({"key": ["b"]}, [("key", "one-way contains", "medium-probability")], 3),
+        (
+            {"key": ["b"]},
+            [("other-key", "one-way contains", "medium-probability")],
+            1,
+        ),
+        (
+            {"key-0": ["b"], "key-1": ["b"]},
+            [
+                ("key-0", "one-way contains", "low-probability"),
+                ("key-1", "one-way contains", "medium-probability"),
+            ],
+            7,
+        ),
+        (
+            {"key-0": ["b"], "key-1": ["b"]},
+            [
+                ("key-0", "one-way contains", "low-probability"),
+                ("key-1", "one-way contains", "exclude"),
+            ],
+            None,
+        ),
+        (
+            {"key-0": ["b"]},
+            [
+                ("key-1", "one-way contains", "low-probability"),
+            ],
+            1,
+        ),
+    ],
+)
+def test_get_edge_weight(
+    src_relationships: dict[str, list[str]],
+    constraint_params: list[tuple[str, ComparatorType, LimitType]],
+    expected_weight: int | None,
+):
+    src_person = MockPerson(name="a", relationships=src_relationships).get_model()
+    dst_person = MockPerson(name="b").get_model()
+
+    constraints = [
+        MockConstraint(
+            relationship_key=relationship_key,
+            comparator=comparator_type,
+            limit=limit_type,
+        ).get_model()
+        for relationship_key, comparator_type, limit_type in constraint_params
+    ]
+
+    assert get_edge_weight(constraints, src_person, dst_person) == expected_weight
 
 
 def test_solution_load():
