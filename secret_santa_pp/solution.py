@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from copy import deepcopy
 from itertools import pairwise
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from matplotlib import pyplot as plt
 from networkx import (
@@ -12,10 +12,12 @@ from networkx import (
     shell_layout,  # pyright: ignore [reportUnknownVariableType]
 )
 from pydantic import BaseModel, ConfigDict
-from rich.console import Console
 
 from secret_santa_pp.config import Config, Constraint, Person
 from secret_santa_pp.wrapper import DiGraph
+
+if TYPE_CHECKING:
+    from rich.console import Console
 
 
 def get_edge_weight(
@@ -137,8 +139,7 @@ class Solution(BaseModel):
         draw_networkx_labels(self.graph, pos)
         plt.show()  # pyright: ignore [reportUnknownMemberType]
 
-    def print(self) -> None:
-        console = Console()
+    def print(self, console: Console) -> None:
         for s in self.graph:
             edges = list(self.graph[s])
             console.print(f"{s}: {', '.join(edges)}")

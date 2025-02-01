@@ -120,7 +120,7 @@ def display_solution_console(
     solution = Solution.load(config=config, solution_key=solution_key)
 
     console.log("Displaying solution")
-    solution.print()
+    solution.print(console)
 
 
 if __name__ == "__main__":
