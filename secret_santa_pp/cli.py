@@ -64,7 +64,7 @@ def generate_solution(
 
     if print_console is True:
         console.log("Printing solution to console")
-        solution.print()
+        solution.print(console)
 
     if solution_key is not None:
         confirmation = typer.confirm(

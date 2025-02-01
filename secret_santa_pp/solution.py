@@ -25,18 +25,16 @@ def get_edge_weight(
 ) -> int | None:
     weight = 1
 
-    if len(src_person.relationships) == 0:
-        return weight
+    if len(src_person.relationships) > 0:
+        for constraint in constraints:
+            if constraint.meet_criterion(src_person, dst_person):
+                if constraint.limit == "exclude":
+                    return None
 
-    for constraint in constraints:
-        if constraint.meet_criterion(src_person, dst_person):
-            if constraint.limit == "exclude":
-                return None
-
-            if constraint.limit == "low-probability":
-                weight += 4
-            elif constraint.limit == "medium-probability":
-                weight += 2
+                if constraint.limit == "low-probability":
+                    weight += 4
+                elif constraint.limit == "medium-probability":
+                    weight += 2
 
     return weight
 
