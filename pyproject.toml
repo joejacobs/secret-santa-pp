@@ -22,6 +22,7 @@ coverage = "*"
 pyright = "*"
 pytest = "*"
 pytest-cov = "*"
+pytest-mock = "*"
 ruff = "*"
 
 [tool.pyright]

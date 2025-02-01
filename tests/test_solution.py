@@ -1,6 +1,7 @@
 import re
 
 import pytest
+from pytest_mock import MockerFixture
 
 from secret_santa_pp.config import ComparatorType, LimitType
 from secret_santa_pp.solution import Solution, get_edge_weight
@@ -84,6 +85,58 @@ def test_solution_load_key_not_found():
 
     with pytest.raises(LookupError, match="Solution key not found: invalid-key"):
         Solution.load(config, "invalid-key")
+
+
+def test_solution_init_graph(mocker: MockerFixture):
+    mock_get_edge_weight = mocker.patch(
+        "secret_santa_pp.solution.get_edge_weight", autospec=True
+    )
+    mock_get_edge_weight.side_effect = list(range(1, 7, 1))
+
+    participants = [str(i) for i in range(3)]
+    config = MockConfig(
+        people=[MockPerson(name=str(i)) for i in range(5)],
+    ).get_model()
+
+    solution = Solution(graph=DiGraph())
+    solution.init_graph(config, participants)
+
+    assert len(solution.graph.nodes) == len(participants)
+
+    weight_counter = 1
+    for i, p1 in enumerate(participants):
+        for p2 in participants[i + 1 :]:
+            assert solution.graph[p1][p2]["weight"] == weight_counter
+            weight_counter += 1
+
+            assert solution.graph[p2][p1]["weight"] == weight_counter
+            weight_counter += 1
+
+
+def test_solution_init_graph_no_participants(mocker: MockerFixture):
+    mock_get_edge_weight = mocker.patch(
+        "secret_santa_pp.solution.get_edge_weight", autospec=True
+    )
+    mock_get_edge_weight.side_effect = list(range(1, 21, 1))
+
+    participants = [str(i) for i in range(5)]
+    config = MockConfig(
+        people=[MockPerson(name=str(i)) for i in range(5)],
+    ).get_model()
+
+    solution = Solution(graph=DiGraph())
+    solution.init_graph(config, None)
+
+    assert len(solution.graph.nodes) == len(participants)
+
+    weight_counter = 1
+    for i, p1 in enumerate(participants):
+        for p2 in participants[i + 1 :]:
+            assert solution.graph[p1][p2]["weight"] == weight_counter
+            weight_counter += 1
+
+            assert solution.graph[p2][p1]["weight"] == weight_counter
+            weight_counter += 1
 
 
 @pytest.mark.parametrize(
