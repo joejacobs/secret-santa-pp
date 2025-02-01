@@ -119,7 +119,6 @@ def test_solution_init_graph_no_participants(mocker: MockerFixture):
     )
     mock_get_edge_weight.side_effect = list(range(1, 21, 1))
 
-    participants = [str(i) for i in range(5)]
     config = MockConfig(
         people=[MockPerson(name=str(i)) for i in range(5)],
     ).get_model()
@@ -127,11 +126,12 @@ def test_solution_init_graph_no_participants(mocker: MockerFixture):
     solution = Solution(graph=DiGraph())
     solution.init_graph(config, None)
 
-    assert len(solution.graph.nodes) == len(participants)
+    expected_participants = [str(i) for i in range(5)]
+    assert len(solution.graph.nodes) == len(expected_participants)
 
     weight_counter = 1
-    for i, p1 in enumerate(participants):
-        for p2 in participants[i + 1 :]:
+    for i, p1 in enumerate(expected_participants):
+        for p2 in expected_participants[i + 1 :]:
             assert solution.graph[p1][p2]["weight"] == weight_counter
             weight_counter += 1
 

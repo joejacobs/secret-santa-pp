@@ -17,7 +17,7 @@ from secret_santa_pp.config import Config, Constraint, Person
 from secret_santa_pp.wrapper import DiGraph
 
 if TYPE_CHECKING:
-    from rich.console import Console
+    from rich.console import Console  # pragma: no cover
 
 
 def get_edge_weight(
