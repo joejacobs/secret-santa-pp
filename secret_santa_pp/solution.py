@@ -42,7 +42,7 @@ def get_edge_weight(
 def tsp_solver(graph: DiGraph[str], weight: str) -> list[str]:
     return cast(
         list[str],
-        approximation.simulated_annealing_tsp(
+        approximation.simulated_annealing_tsp(  # pyright: ignore [reportUnknownMemberType]
             graph, "greedy", weight=weight, max_iterations=100, N_inner=1000
         ),
     )
@@ -104,7 +104,7 @@ class Solution(BaseModel):
         for _ in range(n_recipients):
             tsp_path: list[str] = cast(
                 list[str],
-                approximation.traveling_salesman_problem(
+                approximation.traveling_salesman_problem(  # pyright: ignore [reportUnknownMemberType]
                     deepcopy(init_graph), cycle=True, method=tsp_solver
                 ),
             )
@@ -141,4 +141,4 @@ class Solution(BaseModel):
         console = Console()
         for s in self.graph:
             edges = list(self.graph[s])
-            console.print(f"{s}: {", ".join(edges)}")
+            console.print(f"{s}: {', '.join(edges)}")

@@ -13,9 +13,7 @@ from secretsantagraph import SecretSantaGraph
 def argument_parser():
     p = argparse.ArgumentParser(
         description=(
-            "Generate secret santa pairings "
-            "and send everyone notification "
-            "emails."
+            "Generate secret santa pairings and send everyone notification emails."
         )
     )
     p.add_argument("n_recipients", type=int, help="Number of recipients per gifter")
@@ -28,24 +26,21 @@ def argument_parser():
         "-cl",
         "--low-prob-criteria",
         type=str,
-        help=(
-            "Path to a headerless CSV file containing the " "low-probability criteria"
-        ),
+        help=("Path to a headerless CSV file containing the low-probability criteria"),
     )
     p.add_argument(
         "-cm",
         "--medium-prob-criteria",
         type=str,
         help=(
-            "Path to a headerless CSV file containing the "
-            "medium-probability criteria"
+            "Path to a headerless CSV file containing the medium-probability criteria"
         ),
     )
     p.add_argument(
         "-cx",
         "--exclusion-criteria",
         type=str,
-        help=("Path to a headerless CSV file containing the " "exclusion criteria"),
+        help=("Path to a headerless CSV file containing the exclusion criteria"),
     )
     p.add_argument(
         "-ea",
@@ -66,7 +61,7 @@ def argument_parser():
         "-em",
         "--email-message",
         type=str,
-        help=("Path to a text file containing the notification " "email message"),
+        help=("Path to a text file containing the notification email message"),
     )
     p.add_argument(
         "-en", "--email-sender", type=str, help="Name of the person sending the email"
@@ -75,7 +70,7 @@ def argument_parser():
         "-es",
         "--email-subject",
         type=str,
-        help=("Path to a text file containing the notification " "email subject"),
+        help=("Path to a text file containing the notification email subject"),
     )
     p.add_argument(
         "-lc",
@@ -97,7 +92,7 @@ def argument_parser():
         "-p",
         "--participants",
         type=str,
-        help=("Path to a text file containing the list of " "participants"),
+        help=("Path to a text file containing the list of participants"),
     )
     p.add_argument(
         "-ra",
@@ -109,7 +104,7 @@ def argument_parser():
         "-s",
         "--save-as",
         type=str,
-        help=("Save the solution into the people data JSON file " "under this key"),
+        help=("Save the solution into the people data JSON file under this key"),
     )
     p.add_argument(
         "-sa", "--smtp-address", type=str, help="Address of the SMTP server to use"

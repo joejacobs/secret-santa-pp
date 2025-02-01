@@ -10,21 +10,13 @@ from tests.helper.config import MockConfig, MockConstraint, MockPerson
 
 
 @pytest.mark.parametrize(
-    (
-        "src_relationships",
-        "constraint_params",
-        "expected_weight",
-    ),
+    ("src_relationships", "constraint_params", "expected_weight"),
     [
         ({}, [], 1),
         ({"key": ["b"]}, [("key", "one-way contains", "exclude")], None),
         ({"key": ["b"]}, [("key", "one-way contains", "low-probability")], 5),
         ({"key": ["b"]}, [("key", "one-way contains", "medium-probability")], 3),
-        (
-            {"key": ["b"]},
-            [("other-key", "one-way contains", "medium-probability")],
-            1,
-        ),
+        ({"key": ["b"]}, [("other-key", "one-way contains", "medium-probability")], 1),
         (
             {"key-0": ["b"], "key-1": ["b"]},
             [
@@ -41,13 +33,7 @@ from tests.helper.config import MockConfig, MockConstraint, MockPerson
             ],
             None,
         ),
-        (
-            {"key-0": ["b"]},
-            [
-                ("key-1", "one-way contains", "low-probability"),
-            ],
-            1,
-        ),
+        ({"key-0": ["b"]}, [("key-1", "one-way contains", "low-probability")], 1),
     ],
 )
 def test_get_edge_weight(
@@ -80,9 +66,7 @@ def test_solution_load():
         people=[
             MockPerson(
                 name=str(i),
-                relationships={
-                    "graph-key": src_dst_list_map.get(str(i), []),
-                },
+                relationships={"graph-key": src_dst_list_map.get(str(i), [])},
             )
             for i in range(10)
         ]
