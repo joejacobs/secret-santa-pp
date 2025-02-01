@@ -1,3 +1,4 @@
+from itertools import pairwise
 import re
 
 import pytest
@@ -91,7 +92,7 @@ def test_solution_init_graph(mocker: MockerFixture):
     mock_get_edge_weight = mocker.patch(
         "secret_santa_pp.solution.get_edge_weight", autospec=True
     )
-    mock_get_edge_weight.side_effect = list(range(1, 7, 1))
+    mock_get_edge_weight.side_effect = list(range(1, 7))
 
     participants = [str(i) for i in range(3)]
     config = MockConfig(
@@ -117,7 +118,7 @@ def test_solution_init_graph_no_participants(mocker: MockerFixture):
     mock_get_edge_weight = mocker.patch(
         "secret_santa_pp.solution.get_edge_weight", autospec=True
     )
-    mock_get_edge_weight.side_effect = list(range(1, 21, 1))
+    mock_get_edge_weight.side_effect = list(range(1, 21))
 
     config = MockConfig(
         people=[MockPerson(name=str(i)) for i in range(5)],
@@ -137,6 +138,40 @@ def test_solution_init_graph_no_participants(mocker: MockerFixture):
 
             assert solution.graph[p2][p1]["weight"] == weight_counter
             weight_counter += 1
+
+
+def test_solution_generate_solution(mocker: MockerFixture):
+    paths = [
+        ["0", "1", "2", "3", "4", "0"],
+        ["4", "3", "2", "1", "0", "4"],
+    ]
+    mock_traveling_salesman_problem = mocker.patch(
+        "secret_santa_pp.solution.approximation.traveling_salesman_problem",
+        autospec=True,
+    )
+    mock_traveling_salesman_problem.side_effect = paths
+
+    graph: DiGraph[str] = DiGraph()
+    participants = [str(i) for i in range(5)]
+    for i, p1 in enumerate(participants):
+        for p2 in participants[i + 1 :]:
+            graph.add_edge(  # pyright: ignore [reportUnknownMemberType]
+                p1, p2, weight=1
+            )
+            graph.add_edge(  # pyright: ignore [reportUnknownMemberType]
+                p2, p1, weight=1
+            )
+
+    solution = Solution(graph=graph)
+    solution.generate_solution(2)
+
+    for p in participants:
+        assert solution.graph.in_degree(p) == len(paths)
+        assert solution.graph.in_degree(p) == len(paths)
+
+    for path in paths:
+        for src, dst in pairwise(path):
+            assert solution.graph[src][dst]["weight"] == 1
 
 
 @pytest.mark.parametrize(
