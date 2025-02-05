@@ -11,8 +11,8 @@ class TemplateManager(BaseModel):
         self, event_name: str | None = None, event_date: date | None = None
     ) -> None:
         common_template_data = {
-            "days_to_christmas": self._get_days_delta_text(
-                self._get_christmas_date(), "Christmas"
+            "days_to_christmas": self.get_days_delta_text(
+                self.get_christmas_date(), "Christmas"
             ),
             "year": f"{date.today().year}",
         }
@@ -24,24 +24,24 @@ class TemplateManager(BaseModel):
             common_template_data["event_date"] = event_date.strftime("%A, %d %B %Y")
 
         if event_name is not None and event_date is not None:
-            common_template_data["days_to_event"] = self._get_days_delta_text(
+            common_template_data["days_to_event"] = self.get_days_delta_text(
                 event_date, event_name
             )
 
         super().__init__(common_template_data=common_template_data)
 
-    def _get_days_delta_text(self, event_date: date, event_name: str) -> str:
+    def get_days_delta_text(self, event_date: date, event_name: str) -> str:
         days_delta = (event_date - date.today()).days
         return f"{days_delta} days to {event_name}"
 
-    def _get_christmas_date(self) -> date:
-        return date(self._get_current_year(), 12, 25)
+    def get_christmas_date(self) -> date:
+        return date(self.get_current_year(), 12, 25)
 
-    def _get_current_year(self) -> int:
+    def get_current_year(self) -> int:
         return date.today().year
 
     def populate(self, template_data: dict[str, str], text: str) -> str:
-        combined_template_data = template_data | self.common_template_data
+        combined_template_data = self.common_template_data | template_data
         return text.format(**combined_template_data)
 
 
