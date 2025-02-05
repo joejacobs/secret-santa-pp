@@ -39,7 +39,7 @@ def get_edge_weight(
     return weight
 
 
-def tsp_solver(graph: DiGraph[str], weight: str) -> list[str]: # pragma: no cover
+def tsp_solver(graph: DiGraph[str], weight: str) -> list[str]:
     return cast(
         list[str],
         approximation.simulated_annealing_tsp(  # pyright: ignore [reportUnknownMemberType]

@@ -5,7 +5,7 @@ import pytest
 from pytest_mock import MockerFixture
 
 from secret_santa_pp.config import ComparatorType, LimitType
-from secret_santa_pp.solution import Solution, get_edge_weight
+from secret_santa_pp.solution import Solution, get_edge_weight, tsp_solver
 from secret_santa_pp.wrapper import DiGraph
 
 from tests.helper.config import MockConfig, MockConstraint, MockPerson
@@ -56,6 +56,21 @@ def test_get_edge_weight(
     ]
 
     assert get_edge_weight(constraints, src_person, dst_person) == expected_weight
+
+
+def test_tsp_solver(mocker: MockerFixture):
+    mock_simulated_annealing_tsp = mocker.patch(
+        "secret_santa_pp.solution.approximation.simulated_annealing_tsp", autospec=True
+    )
+    mock_simulated_annealing_tsp.return_value = ["a", "b", "c"]
+
+    graph: DiGraph[str] = DiGraph()
+    return_value = tsp_solver(graph, "weight")
+
+    assert return_value == ["a", "b", "c"]
+    mock_simulated_annealing_tsp.assert_called_once_with(
+        graph, "greedy", weight="weight", max_iterations=100, N_inner=1000
+    )
 
 
 def test_solution_load():
