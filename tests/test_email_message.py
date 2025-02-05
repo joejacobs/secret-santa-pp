@@ -1,6 +1,5 @@
 from datetime import date, timedelta
 from pathlib import Path
-from tempfile import NamedTemporaryFile
 
 import pytest
 from pytest_mock import MockerFixture
