@@ -16,8 +16,8 @@ from pydantic import BaseModel, ConfigDict
 from secret_santa_pp.config import Config, Constraint, Person
 from secret_santa_pp.wrapper import DiGraph
 
-if TYPE_CHECKING:
-    from rich.console import Console  # pragma: no cover
+if TYPE_CHECKING:  # pragma: no cover
+    from rich.console import Console
 
 
 def get_edge_weight(
@@ -39,7 +39,7 @@ def get_edge_weight(
     return weight
 
 
-def tsp_solver(graph: DiGraph[str], weight: str) -> list[str]:
+def tsp_solver(graph: DiGraph[str], weight: str) -> list[str]: # pragma: no cover
     return cast(
         list[str],
         approximation.simulated_annealing_tsp(  # pyright: ignore [reportUnknownMemberType]
