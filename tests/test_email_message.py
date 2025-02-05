@@ -194,81 +194,71 @@ def test_email_message_get_subject(tmp_path: Path, mocker: MockerFixture):
     mock_populate.assert_called_once_with(template_manager, template_data, subject)
 
 
-def test_email_message_get_message_html(tmp_path: Path, mocker: MockerFixture):
+@pytest.mark.parametrize("html_exists", [True, False])
+def test_email_message_get_message_html(
+    tmp_path: Path, mocker: MockerFixture, html_exists: bool
+):
     mock_populate = mocker.patch(
         "secret_santa_pp.email_message.TemplateManager.populate", autospec=True
     )
-    mock_populate.return_value = "populated message html"
+    mock_populate.return_value = "populated message"
 
-    html_path = tmp_path / "template.html"
-    with html_path.open("w") as fp:
-        fp.write("html template")
+    path = tmp_path / "template"
+    with path.open("w") as fp:
+        fp.write("template message")
 
     template_manager = TemplateManager()
-    template_data = {"tag1": "tag1data"}
+    template_data = {"tag": "tagdata"}
 
-    message = EmailMessage(template_manager, "subject", html_path, None)
-
-    assert message.get_message_html(template_data) == "populated message html"
-    mock_populate.assert_called_once_with(
-        template_manager, template_data, "html template"
+    message = EmailMessage(
+        template_manager,
+        "subject",
+        path if html_exists else None,
+        None if html_exists else path,
     )
 
+    html_message = message.get_message_html(template_data)
 
-def test_email_message_get_message_html_is_none(tmp_path: Path, mocker: MockerFixture):
+    if html_exists:
+        assert html_message == "populated message"
+        mock_populate.assert_called_once_with(
+            template_manager, template_data, "template message"
+        )
+    else:
+        assert html_message is None
+        mock_populate.assert_not_called()
+
+
+@pytest.mark.parametrize("text_exists", [True, False])
+def test_email_message_get_message_text(
+    tmp_path: Path, mocker: MockerFixture, text_exists: bool
+):
     mock_populate = mocker.patch(
         "secret_santa_pp.email_message.TemplateManager.populate", autospec=True
     )
-    mock_populate.return_value = "populated message text"
+    mock_populate.return_value = "populated message"
 
-    text_path = tmp_path / "template.txt"
-    with text_path.open("w") as fp:
-        fp.write("text template")
-
-    template_manager = TemplateManager()
-    template_data = {"tag1": "tag1data"}
-
-    message = EmailMessage(template_manager, "subject", None, text_path)
-
-    assert message.get_message_html(template_data) is None
-    mock_populate.assert_not_called()
-
-
-def test_email_message_get_message_text(tmp_path: Path, mocker: MockerFixture):
-    mock_populate = mocker.patch(
-        "secret_santa_pp.email_message.TemplateManager.populate", autospec=True
-    )
-    mock_populate.return_value = "populated message text"
-
-    text_path = tmp_path / "template.txt"
-    with text_path.open("w") as fp:
-        fp.write("text template")
+    path = tmp_path / "template"
+    with path.open("w") as fp:
+        fp.write("template message")
 
     template_manager = TemplateManager()
-    template_data = {"tag1": "tag1data"}
+    template_data = {"tag": "tagdata"}
 
-    message = EmailMessage(template_manager, "subject", None, text_path)
-
-    assert message.get_message_text(template_data) == "populated message text"
-    mock_populate.assert_called_once_with(
-        template_manager, template_data, "text template"
+    message = EmailMessage(
+        template_manager,
+        "subject",
+        None if text_exists else path,
+        path if text_exists else None,
     )
 
+    text_message = message.get_message_text(template_data)
 
-def test_email_message_get_message_text_is_none(tmp_path: Path, mocker: MockerFixture):
-    mock_populate = mocker.patch(
-        "secret_santa_pp.email_message.TemplateManager.populate", autospec=True
-    )
-    mock_populate.return_value = "populated message html"
-
-    html_path = tmp_path / "template.html"
-    with html_path.open("w") as fp:
-        fp.write("html template")
-
-    template_manager = TemplateManager()
-    template_data = {"tag1": "tag1data"}
-
-    message = EmailMessage(template_manager, "subject", html_path, None)
-
-    assert message.get_message_text(template_data) is None
-    mock_populate.assert_not_called()
+    if text_exists:
+        assert text_message == "populated message"
+        mock_populate.assert_called_once_with(
+            template_manager, template_data, "template message"
+        )
+    else:
+        assert text_message is None
+        mock_populate.assert_not_called()
