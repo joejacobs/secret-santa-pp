@@ -45,7 +45,7 @@ class TemplateManager(BaseModel):
         return text.format(**combined_template_data)
 
 
-class EmailMessage(BaseModel):
+class EmailMessageManager(BaseModel):
     subject: str
     message_html: str | None
     message_text: str | None

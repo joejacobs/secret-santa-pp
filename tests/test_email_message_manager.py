@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 from pytest_mock import MockerFixture
 
-from secret_santa_pp.email_message import EmailMessage, TemplateManager
+from secret_santa_pp.email_message_manager import EmailMessageManager, TemplateManager
 
 TODAY = date.today()
 YEAR = date.today().year
@@ -133,10 +133,10 @@ def test_template_manager_populate(
     assert formatted_text == expected_text
 
 
-def test_email_message_no_template_specified():
+def test_email_message_manager_no_template_specified():
     msg = "Either HTML Template or Text Template must be specified"
     with pytest.raises(RuntimeError, match=msg):
-        EmailMessage(TemplateManager(), "subject", None, None)
+        EmailMessageManager(TemplateManager(), "subject", None, None)
 
 
 @pytest.mark.parametrize(
@@ -147,7 +147,7 @@ def test_email_message_no_template_specified():
         ("blank subject", "html template", "text template"),
     ],
 )
-def test_email_message_init(
+def test_email_message_manager_init(
     tmp_path: Path,
     subject: str,
     html: str | None,
@@ -166,7 +166,7 @@ def test_email_message_init(
             fp.write(text)
 
     template_manager = TemplateManager()
-    message = EmailMessage(template_manager, subject, html_path, text_path)
+    message = EmailMessageManager(template_manager, subject, html_path, text_path)
 
     assert message.subject == subject
     assert message.message_html == html
@@ -174,9 +174,9 @@ def test_email_message_init(
     assert message.template_manager == template_manager
 
 
-def test_email_message_get_subject(tmp_path: Path, mocker: MockerFixture):
+def test_email_message_manager_get_subject(tmp_path: Path, mocker: MockerFixture):
     mock_populate = mocker.patch(
-        "secret_santa_pp.email_message.TemplateManager.populate", autospec=True
+        "secret_santa_pp.email_message_manager.TemplateManager.populate", autospec=True
     )
     mock_populate.return_value = "populated email subject"
 
@@ -188,18 +188,18 @@ def test_email_message_get_subject(tmp_path: Path, mocker: MockerFixture):
     template_data = {"tag1": "tag1data"}
     subject = "email subject"
 
-    message = EmailMessage(template_manager, subject, html_path, None)
+    message = EmailMessageManager(template_manager, subject, html_path, None)
 
     assert message.get_subject(template_data) == "populated email subject"
     mock_populate.assert_called_once_with(template_manager, template_data, subject)
 
 
 @pytest.mark.parametrize("html_exists", [True, False])
-def test_email_message_get_message_html(
+def test_email_message_manager_get_message_html(
     tmp_path: Path, mocker: MockerFixture, html_exists: bool
 ):
     mock_populate = mocker.patch(
-        "secret_santa_pp.email_message.TemplateManager.populate", autospec=True
+        "secret_santa_pp.email_message_manager.TemplateManager.populate", autospec=True
     )
     mock_populate.return_value = "populated message"
 
@@ -210,7 +210,7 @@ def test_email_message_get_message_html(
     template_manager = TemplateManager()
     template_data = {"tag": "tagdata"}
 
-    message = EmailMessage(
+    message = EmailMessageManager(
         template_manager,
         "subject",
         path if html_exists else None,
@@ -230,11 +230,11 @@ def test_email_message_get_message_html(
 
 
 @pytest.mark.parametrize("text_exists", [True, False])
-def test_email_message_get_message_text(
+def test_email_message_manager_get_message_text(
     tmp_path: Path, mocker: MockerFixture, text_exists: bool
 ):
     mock_populate = mocker.patch(
-        "secret_santa_pp.email_message.TemplateManager.populate", autospec=True
+        "secret_santa_pp.email_message_manager.TemplateManager.populate", autospec=True
     )
     mock_populate.return_value = "populated message"
 
@@ -245,7 +245,7 @@ def test_email_message_get_message_text(
     template_manager = TemplateManager()
     template_data = {"tag": "tagdata"}
 
-    message = EmailMessage(
+    message = EmailMessageManager(
         template_manager,
         "subject",
         None if text_exists else path,
